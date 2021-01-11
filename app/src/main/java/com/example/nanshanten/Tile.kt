@@ -1,6 +1,8 @@
 package com.example.nanshanten
 
-class Tile(val type: Type, num: Int){
+import kotlin.reflect.typeOf
+
+class Tile(private val type: Type, private val number: Int){
 
     companion object{
         private val circleTextMap = mapOf(1 to "一筒", 2 to "二筒", 3 to "三筒", 4 to "四筒", 5 to "五筒", 6 to "六筒", 7 to "七筒",
@@ -13,7 +15,7 @@ class Tile(val type: Type, num: Int){
         private val windTitleMap = mapOf(1 to "east", 2 to "south", 3 to "west", 4 to "north")
         private val dragonTextMap = mapOf(1 to "白", 2 to "發", 3 to "中")
         private val dragonTitleMap = mapOf(1 to "whitedragon", 2 to "greendragon", 3 to "reddragon")
-        private var imageIdMap = mutableMapOf<Int, List<String>>()
+        private val imageIdMap = mutableMapOf<Int, List<String>>()
 
         fun getTileText(type: Type, num: Int): String{
             return when(type){
@@ -54,7 +56,7 @@ class Tile(val type: Type, num: Int){
     private lateinit var imageTitle: String
 
     init{
-        setTile(num)
+        setTile(number)
     }
 
     fun setTile(num:Int){
@@ -67,11 +69,57 @@ class Tile(val type: Type, num: Int){
         }
     }
 
-    enum class Type{
-        CHARACTER, CIRCLE, BAMBOO, WIND, DRAGON, UNDEFINED
+    fun getType(): Type{
+        return type
+    }
+
+    fun getNumber(): Int{
+        return number
     }
 
     override fun toString(): String {
         return text
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if(other is Tile){
+            if(other.getType() == type && other.getNumber() == number)
+                return true
+        }
+        return false
+    }
+
+    enum class Type{
+        CHARACTER{
+            override fun getTypeSize(): Int{
+                return 9
+            }
+        },
+        CIRCLE{
+            override fun getTypeSize(): Int{
+                return 9
+            }
+        },
+        BAMBOO{
+            override fun getTypeSize(): Int{
+                return 9
+            }
+        },
+        WIND{
+            override fun getTypeSize(): Int{
+                return 4
+            }
+        },
+        DRAGON{
+            override fun getTypeSize(): Int{
+                return 3
+            }
+        },
+        UNDEFINED{
+            override fun getTypeSize(): Int{
+                return -1
+            }
+        };
+        abstract  fun getTypeSize(): Int
     }
 }

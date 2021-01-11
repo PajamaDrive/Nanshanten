@@ -19,66 +19,19 @@ class Hand{
         return tiles.get(position)
     }
 
-    enum class TileGroup {
-        CHOW{
-            override fun existTileGroup(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+    fun existTile(tile: Tile): Boolean{
+        return tiles.contains(tile)
+    }
 
-            override fun getTileGroupList(): List<List<Tile>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+    fun getSortHand(): MutableList<Tile>{
+        return tiles.sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+    }
 
-            override fun getTileGroupListNum(): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        },
-
-        PUNG{
-            override fun existTileGroup(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupList(): List<List<Tile>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupListNum(): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        },
-
-        KONG{
-            override fun existTileGroup(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupList(): List<List<Tile>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupListNum(): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        },
-
-        PAIR{
-            override fun existTileGroup(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupList(): List<List<Tile>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun getTileGroupListNum(): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        };
-
-        abstract fun existTileGroup(): Boolean
-        abstract fun getTileGroupList(): List<List<Tile>>
-        abstract fun getTileGroupListNum(): Int
-
+    fun getRemoveList(elements: MutableList<Tile>): MutableList<Tile>{
+        val removedList = getSortHand()
+        for(tile in elements){
+            removedList.remove(tile)
+        }
+        return removedList.sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
     }
 }

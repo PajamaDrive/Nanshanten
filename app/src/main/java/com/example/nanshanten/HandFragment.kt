@@ -3,10 +3,7 @@ package com.example.nanshanten
 import android.content.ClipData
 import android.content.ClipDescription
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Point
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.DragEvent
@@ -16,8 +13,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -121,6 +116,7 @@ class HandFragment : Fragment(R.layout.activity_main){
         (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
         (view.getChildAt(1) as TextView).text = tileText
         hand.changeTile(handViewId.get(view.id)!! - 1, Tile(Tile.getTileType(id), Tile.getTileNumber(id)))
+        yakuText.text = Yaku.getYakuList(hand).toString()
         Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString())
     }
 
