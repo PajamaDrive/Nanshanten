@@ -34,4 +34,15 @@ class Hand{
         }
         return removedList.sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
     }
+
+    fun canRemove(elements: MutableList<Tile>): Boolean{
+        val removedList = getSortHand()
+        for(tile in elements){
+            if(removedList.indexOf(tile) == -1)
+                return false
+            else
+                removedList.remove(tile)
+        }
+        return true
+    }
 }

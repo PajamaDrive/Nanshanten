@@ -109,7 +109,7 @@
 
                 <TextView
                     android:id="@+id/yakuText"
-                    android:layout_width="250dp"
+                    android:layout_width="450dp"
                     android:layout_height="wrap_content"
                     android:text="ほげほげ"
                     android:textSize="20sp" />

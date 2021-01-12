@@ -109,15 +109,20 @@ class HandFragment : Fragment(R.layout.activity_main){
         initiallize()
     }
 
-    fun changeHand(view: View, id: Int){
-        val tileImageId = getDragImageId(id)
-        val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
+    fun changeHand(view: View, id: Int) {
+        val tile = Tile(Tile.getTileType(id), Tile.getTileNumber(id))
         (view as LinearLayout).background = null
-        (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
-        (view.getChildAt(1) as TextView).text = tileText
-        hand.changeTile(handViewId.get(view.id)!! - 1, Tile(Tile.getTileType(id), Tile.getTileNumber(id)))
-        yakuText.text = Yaku.getYakuList(hand).toString()
-        Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString())
+        if (hand.getSortHand().count { it.equals(tile) } < 4) {
+            val tileImageId = getDragImageId(id)
+            val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
+            (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
+            (view.getChildAt(1) as TextView).text = tileText
+            hand.changeTile(handViewId.get(view.id)!! - 1, tile)
+            yakuText.text = Yaku.getYakuList(hand).toString()
+            Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString()
+            )
+
+        }
     }
 
     fun getDragImageId(dragId: Int): Int{
