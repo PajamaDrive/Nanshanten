@@ -6,492 +6,120 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:divider="@layout/divider"
-        android:dividerPadding="10dp"
-        android:showDividers="middle">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/round"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="東"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/roundNum"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="一"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/fieldNumText"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="局"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/continuousNum"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="一"
-                android:textSize="20sp"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/continuousText"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="本場"
-                android:textSize="20sp"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/discardText"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:text="捨て牌"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/discard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/editbox_dropdown_light_frame" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
+            android:divider="@layout/divider"
+            android:dividerPadding="10dp"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/handText"
+                    android:id="@+id/round"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="東"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/roundNum"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="一"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/fieldNumText"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="局"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/continuousNum"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="一"
+                    android:textSize="20sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/continuousText"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="本場"
+                    android:textSize="20sp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/discardText"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:text="手牌"
+                    android:text="捨て牌"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/yakuText"
-                    android:layout_width="450dp"
+                <ImageView
+                    android:id="@+id/discard"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ほげほげ"
-                    android:textSize="20sp" />
+                    app:srcCompat="@android:drawable/editbox_dropdown_light_frame" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/hand1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand1Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand1Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand2Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand2Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand3Image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand3Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand4Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand4Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand5Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand5Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand6Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand6Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand7Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand7Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand8Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand8Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand9Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand9Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand10Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand10Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand11Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand11Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand12"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand12Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand12Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand13"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand13Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand13Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/hand14"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/hand14Image"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        app:srcCompat="@drawable/whitedragon" />
-
-                    <TextView
-                        android:id="@+id/hand14Text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="白"
-                        android:textSize="18sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tileText"
-                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="牌の入れ替え"
-                android:textSize="20sp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="-5dp"
-                tools:context=".MainActivity">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/handText"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="手牌"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/yakuText"
+                        android:layout_width="550dp"
+                        android:layout_height="wrap_content"
+                        android:text="ほげほげ"
+                        android:textSize="20sp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -499,851 +127,1332 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/hand1"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/hand1Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
+
+                        <TextView
+                            android:id="@+id/hand1Text"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character1Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character1" />
-
-                            <TextView
-                                android:id="@+id/tile_character1Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="一萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character2Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character2" />
-
-                            <TextView
-                                android:id="@+id/tile_character2Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="二萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character3Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character3" />
-
-                            <TextView
-                                android:id="@+id/tile_character3Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="三萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character4Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character4" />
-
-                            <TextView
-                                android:id="@+id/tile_character4Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="四萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character5Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character5" />
-
-                            <TextView
-                                android:id="@+id/tile_character5Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="五萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character6Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character6" />
-
-                            <TextView
-                                android:id="@+id/tile_character6Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="六萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character7Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character7" />
-
-                            <TextView
-                                android:id="@+id/tile_character7Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="七萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character8Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character8" />
-
-                            <TextView
-                                android:id="@+id/tile_character8Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="八萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_character9Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/character9" />
-
-                            <TextView
-                                android:id="@+id/tile_character9Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="九萬"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/hand2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand2Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_circle1Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle1" />
-
-                            <TextView
-                                android:id="@+id/tile_circle1Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="一筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle2Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle2" />
-
-                            <TextView
-                                android:id="@+id/tile_circle2Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="二筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle3Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle3" />
-
-                            <TextView
-                                android:id="@+id/tile_circle3Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="三筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle4Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle4" />
-
-                            <TextView
-                                android:id="@+id/tile_circle4Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="四筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle5Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle5" />
-
-                            <TextView
-                                android:id="@+id/tile_circle5Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="五筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle6Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle6" />
-
-                            <TextView
-                                android:id="@+id/tile_circle6Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="六筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle7Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle7" />
-
-                            <TextView
-                                android:id="@+id/tile_circle7Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="七筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle8Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle8" />
-
-                            <TextView
-                                android:id="@+id/tile_circle8Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="八筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_circle9Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/circle9" />
-
-                            <TextView
-                                android:id="@+id/tile_circle9Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="九筒"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/hand2Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/hand3"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
+                        <ImageView
+                            android:id="@+id/hand3Image"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_bamboo1Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo1" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo1Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="一索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo2Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo2" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo2Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="二索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo3Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo3" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo3Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="三索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo4Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo4" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo4Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="四索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo5Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo5" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo5Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="五索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo6Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo6" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo6Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="六索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo7Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo7" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo7Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="七索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo8Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo8" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo8Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="八索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/tile_bamboo9Image"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/bamboo9" />
-
-                            <TextView
-                                android:id="@+id/tile_bamboo9Text"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="九索"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/hand3Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/hand4"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand4Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_eastImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/east" />
+                        <TextView
+                            android:id="@+id/hand4Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_eastText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="東"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand5Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_southImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/south" />
+                        <TextView
+                            android:id="@+id/hand5Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_southText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="南"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand6Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_westImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/west" />
+                        <TextView
+                            android:id="@+id/hand6Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_westText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="西"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand7Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_northImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/north" />
+                        <TextView
+                            android:id="@+id/hand7Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_northText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="北"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand8Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_whiteDragonImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/whitedragon" />
+                        <TextView
+                            android:id="@+id/hand8Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_whiteDragonText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="白"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand9Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_greenDragonImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/greendragon" />
+                        <TextView
+                            android:id="@+id/hand9Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_greenDragonText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="發"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/hand10Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
 
-                            <ImageView
-                                android:id="@+id/tile_redDragonImage"
-                                android:layout_width="45dp"
-                                android:layout_height="60dp"
-                                android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
-                                app:srcCompat="@drawable/reddragon" />
+                        <TextView
+                            android:id="@+id/hand10Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/tile_redDragonText"
-                                android:layout_width="45dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="中"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/hand11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
 
+                        <ImageView
+                            android:id="@+id/hand11Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
+
+                        <TextView
+                            android:id="@+id/hand11Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hand12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
+
+                        <ImageView
+                            android:id="@+id/hand12Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
+
+                        <TextView
+                            android:id="@+id/hand12Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hand13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
+
+                        <ImageView
+                            android:id="@+id/hand13Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
+
+                        <TextView
+                            android:id="@+id/hand13Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/nullTile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
+
+                        <ImageView
+                            android:id="@+id/nullTileImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/null_tile" />
+
+                        <TextView
+                            android:id="@+id/nullTIleText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text=""
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hand14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp">
+
+                        <ImageView
+                            android:id="@+id/hand14Image"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            app:srcCompat="@drawable/whitedragon" />
+
+                        <TextView
+                            android:id="@+id/hand14Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="白"
+                            android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
 
-            </HorizontalScrollView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="1dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="1dp">
+
+                    <Button
+                        android:id="@+id/pungButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="ポン"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/chowButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="チー"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/kongButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="カン"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/claimArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/claimText"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="鳴いた牌"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/claimTiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tileText"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="牌の入れ替え"
+                    android:textSize="20sp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_marginTop="5dp"
+                    tools:context=".MainActivity">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character1Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character1" />
+
+                                <TextView
+                                    android:id="@+id/tile_character1Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="一萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character2Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character2" />
+
+                                <TextView
+                                    android:id="@+id/tile_character2Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="二萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character3Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character3" />
+
+                                <TextView
+                                    android:id="@+id/tile_character3Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="三萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character4Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character4" />
+
+                                <TextView
+                                    android:id="@+id/tile_character4Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="四萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character5Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character5" />
+
+                                <TextView
+                                    android:id="@+id/tile_character5Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="五萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character6Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character6" />
+
+                                <TextView
+                                    android:id="@+id/tile_character6Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="六萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character7Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character7" />
+
+                                <TextView
+                                    android:id="@+id/tile_character7Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="七萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character8Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character8" />
+
+                                <TextView
+                                    android:id="@+id/tile_character8Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="八萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_character9Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/character9" />
+
+                                <TextView
+                                    android:id="@+id/tile_character9Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="九萬"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle1Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle1" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle1Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="一筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle2Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle2" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle2Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="二筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle3Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle3" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle3Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="三筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle4Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle4" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle4Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="四筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle5Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle5" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle5Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="五筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle6Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle6" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle6Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="六筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle7Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle7" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle7Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="七筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle8Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle8" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle8Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="八筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_circle9Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/circle9" />
+
+                                <TextView
+                                    android:id="@+id/tile_circle9Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="九筒"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo1Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo1" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo1Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="一索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo2Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo2" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo2Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="二索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo3Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo3" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo3Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="三索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo4Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo4" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo4Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="四索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo5Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo5" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo5Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="五索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo6Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo6" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo6Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="六索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo7Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo7" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo7Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="七索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo8Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo8" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo8Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="八索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_bamboo9Image"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/bamboo9" />
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo9Text"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="九索"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_eastImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/east" />
+
+                                <TextView
+                                    android:id="@+id/tile_eastText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="東"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_southImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/south" />
+
+                                <TextView
+                                    android:id="@+id/tile_southText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="南"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_westImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/west" />
+
+                                <TextView
+                                    android:id="@+id/tile_westText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="西"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_northImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/north" />
+
+                                <TextView
+                                    android:id="@+id/tile_northText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="北"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_whiteDragonImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/whitedragon" />
+
+                                <TextView
+                                    android:id="@+id/tile_whiteDragonText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="白"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_greenDragonImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/greendragon" />
+
+                                <TextView
+                                    android:id="@+id/tile_greenDragonText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="發"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/tile_redDragonImage"
+                                    android:layout_width="45dp"
+                                    android:layout_height="60dp"
+                                    android:adjustViewBounds="false"
+                                    android:scaleType="fitXY"
+                                    app:srcCompat="@drawable/reddragon" />
+
+                                <TextView
+                                    android:id="@+id/tile_redDragonText"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="中"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </HorizontalScrollView>
 
 
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

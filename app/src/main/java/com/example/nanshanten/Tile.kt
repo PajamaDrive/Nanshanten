@@ -47,8 +47,12 @@ class Tile(private val type: Type, private val number: Int){
             return Integer.parseInt(imageIdMap.get(id)!!.get(0))
         }
 
-        fun getTileIdText(id:Int): String{
+        fun getTileIdText(id: Int): String{
             return imageIdMap.get(id)!!.get(1)
+        }
+
+        fun getTileIdTextByText(text: String): String{
+            return imageIdMap.values.toList().find { it.get(2).equals(text) }!!.get(1)
         }
     }
 
