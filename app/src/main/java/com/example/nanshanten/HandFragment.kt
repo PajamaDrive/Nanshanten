@@ -2,28 +2,32 @@ package com.example.nanshanten
 
 import android.content.ClipData
 import android.content.ClipDescription
+import android.drm.DrmStore
 import android.graphics.Canvas
 import android.graphics.Point
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.marginBottom
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
-import android.R.attr.right
-import android.R.attr.left
-
+import org.w3c.dom.Text
 
 
 class HandFragment : Fragment(R.layout.activity_main){
+/*
+    val doubleClickListener = View.OnGenericMotionListener {
 
-    val dragListner = View.OnDragListener { v, event ->
+    }
 
+
+ */
+    val dragListener = View.OnDragListener { v, event ->
         // Handles each of the expected events
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED -> {
@@ -38,57 +42,44 @@ class HandFragment : Fragment(R.layout.activity_main){
                 (v as LinearLayout).setBackgroundResource(R.drawable.border)
                 true
             }
-
-            DragEvent.ACTION_DRAG_LOCATION ->
-                // Ignore the event
-                true
             DragEvent.ACTION_DRAG_EXITED -> {
                 (v as LinearLayout).background = null
-
                 true
             }
             DragEvent.ACTION_DROP -> {
-                // Gets the item containing the dragged data
-
-                changeHand(v, Integer.parseInt(event.clipData.getItemAt(0).text.toString()))
-
-                // Invalidates the view to force a redraw
+                discardTile(v, Integer.parseInt(event.clipData.getItemAt(0).text.toString()))
                 v.invalidate()
-
-                // Returns true. DragEvent.getResult() will return true.
-                true
-            }
-
-            DragEvent.ACTION_DRAG_ENDED -> {
                 true
             }
             else -> {
-                // An unknown action type was received.
-                Log.e("DragDrop Example", "Unknown action type received by OnDragListener.")
                 false
             }
         }
     }
 
-    val longClicListner = View.OnLongClickListener { v: View ->
+    val longClickListener = View.OnLongClickListener { v: View ->
 
-        v.tag = v.id.toString()
-        // Create a new ClipData.Item from the ImageView object's tag
-        val item = ClipData.Item(v.tag as? CharSequence)
+        if(!(((v as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))) {
+            v.tag = v.id.toString()
+            // Create a new ClipData.Item from the ImageView object's tag
+            val item = ClipData.Item(v.tag as? CharSequence)
 
-        // Create a new ClipData using the tag as a label, the plain text MIME type, and
-        // the already-created item. This will create a new ClipDescription object within the
-        // ClipData, and set its MIME type entry to "text/plain"
-        val dragData = ClipData(v.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
+            // Create a new ClipData using the tag as a label, the plain text MIME type, and
+            // the already-created item. This will create a new ClipDescription object within the
+            // ClipData, and set its MIME type entry to "text/plain"
+            val dragData =
+                ClipData(v.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
 
-        // Instantiates the drag shadow builder.
-        val myShadow = MyDragShadowBuilder(v)
-
-        // Starts the drag
-        v.startDrag(dragData, myShadow, null, 0)
+            // Instantiates the drag shadow builder.
+            val myShadow = MyDragShadowBuilder(v)
+            // Starts the drag
+            v.startDrag(dragData, myShadow, null, 0)
+        }else{
+            false
+        }
     }
 
-    val clickListener = View.OnClickListener { v: View ->
+    val handClickListener = View.OnClickListener { v: View ->
         if(selectedHand.indexOf(handViewId.get(v.id)!! - 1) == -1){
             if(selectedHand.size < 4) {
                 selectedHand.add(handViewId.get(v.id)!! - 1)
@@ -100,6 +91,10 @@ class HandFragment : Fragment(R.layout.activity_main){
             (v as LinearLayout).background = null
         }
         canClaim()
+    }
+
+    val tileClickListener = View.OnClickListener { v: View ->
+        changeDraw(v)
     }
 
     val claimButtonListener = { type: String ->
@@ -119,7 +114,7 @@ class HandFragment : Fragment(R.layout.activity_main){
                 imageView.setImageResource(imageId)
                 imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(40),dpToPx(55))
                 textView.text = (handView.getChildAt(1) as TextView).text
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18.0f)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.0f)
                 textView.gravity = Gravity.CENTER
 
                 layout.addView(imageView)
@@ -148,7 +143,9 @@ class HandFragment : Fragment(R.layout.activity_main){
 
     lateinit var handViewId: Map<Int, Int>
     val hand = Hand()
+    val wall = Wall()
     val selectedHand = mutableListOf<Int>()
+    val spinnerItem = arrayOf("東", "南", "西", "北")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -167,7 +164,7 @@ class HandFragment : Fragment(R.layout.activity_main){
     fun changeHand(view: View, id: Int) {
         val tile = Tile(Tile.getTileType(id), Tile.getTileNumber(id))
         (view as LinearLayout).background = null
-        if (hand.getHand().count { it.equals(tile) } < 4) {
+        if (wall.count(tile) != 0) {
             val tileImageId = getDragImageId(id)
             val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
             (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
@@ -176,11 +173,56 @@ class HandFragment : Fragment(R.layout.activity_main){
                 selectedHand.remove(handViewId.get(view.id)!! - 1)
                 canClaim()
             }
-            hand.changeTile(handViewId.get(view.id)!! - 1, tile)
-            yakuText.text = Yaku.getYakuList(hand).toString()
-            Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString())
+            if(handViewId.get(view.id)!! <= hand.getHand().size) {
+                hand.changeTile(handViewId.get(view.id)!! - 1, tile)
+                Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString())
+            }
+            else {
+                hand.setDraw(tile)
+                Log.d("debug", "change at draw, " + hand.getDraw().toString())
+            }
+            //yakuText.text = Yaku.getYakuList(hand).toString()
         }
         updateView()
+    }
+
+    fun changeDraw(view: View) {
+        val drawView = activity!!.findViewById<LinearLayout>(handViewId.keys.elementAt(handViewId.keys.size - 1))
+        changeHand(drawView, view.id)
+    }
+
+    fun discardTile(view: View, id: Int){
+        view.background = null
+
+        if(hand.getDraw().getType() != Tile.Type.UNDEFINED){
+            if(((discardTiles.getChildAt(0) as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))
+                discardTiles.removeViewAt(0)
+
+            val layout = LinearLayout(ContextGetter.applicationContext())
+            val imageView = ImageView(ContextGetter.applicationContext())
+            val textView = TextView(ContextGetter.applicationContext())
+            val handView = activity!!.findViewById<LinearLayout>(id)
+            val imageId = resources.getIdentifier(Tile.getTileIdTextByText((handView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
+            layout.orientation = LinearLayout.VERTICAL
+            imageView.setImageResource(imageId)
+            imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(30),dpToPx(43))
+            textView.text = (handView.getChildAt(1) as TextView).text
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.0f)
+            textView.gravity = Gravity.CENTER
+
+            layout.addView(imageView)
+            layout.addView(textView)
+
+            val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+            layoutMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(2), dpToPx(0))
+            layout.layoutParams = layoutMarginParams
+            discardTiles.addView(layout)
+
+            wall.remove(hand.getDraw())
+            hand.discardTile(handViewId.get(id)!!)
+
+            updateView()
+        }
     }
 
     fun canClaim(){
@@ -207,24 +249,31 @@ class HandFragment : Fragment(R.layout.activity_main){
         hand.sortHand()
         for(index in 1..14) {
             val handView = activity!!.findViewById<LinearLayout>(handViewId.keys.elementAt(index - 1))
-            if (hand.getHand().size >= index) {
-                val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getHand().get(index - 1).toString()), "drawable", "com.example.nanshanten")
+            if(index != 14){
+                if (hand.getHand().size >= index) {
+                    val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getHand().get(index - 1).toString()), "drawable", "com.example.nanshanten")
+                    (handView.getChildAt(0) as ImageView).setImageResource(imageId)
+                    (handView.getChildAt(1) as TextView).text = hand.getHand().get(index - 1).toString()
+                }
+                else{
+                    val imageId = resources.getIdentifier("null_tile", "drawable", "com.example.nanshanten")
+                    (handView.getChildAt(0) as ImageView).setImageResource(imageId)
+                    (handView.getChildAt(1) as TextView).text = ""
+                    handView.setOnClickListener(null)
+                    handView.setOnLongClickListener(null)
+                    pungButton.visibility = View.GONE
+                    chowButton.visibility = View.GONE
+                    kongButton.visibility = View.GONE
+                }
+            }else {
+                val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getDraw().toString()), "drawable", "com.example.nanshanten")
                 (handView.getChildAt(0) as ImageView).setImageResource(imageId)
-                (handView.getChildAt(1) as TextView).text = hand.getHand().get(index - 1).toString()
-            }
-            else{
-                val imageId = resources.getIdentifier("null_tile", "drawable", "com.example.nanshanten")
-                (handView.getChildAt(0) as ImageView).setImageResource(imageId)
-                (handView.getChildAt(1) as TextView).text = ""
-                handView.setOnClickListener(null)
-                handView.setOnLongClickListener(null)
-                pungButton.visibility = View.GONE
-                chowButton.visibility = View.GONE
-                kongButton.visibility = View.GONE
+                (handView.getChildAt(1) as TextView).text = hand.getDraw().toString()
             }
             handView.background = null
         }
         selectedHand.clear()
+        Log.d("wall", wall.getWall().toString())
     }
 
     fun getDragImageId(dragId: Int): Int{
@@ -270,73 +319,81 @@ class HandFragment : Fragment(R.layout.activity_main){
         Tile.setImageId(tile_whiteDragonImage.id, listOf("1", "whitedragon", "白"))
         Tile.setImageId(tile_greenDragonImage.id, listOf("2", "greendragon", "發"))
         Tile.setImageId(tile_redDragonImage.id, listOf("3", "reddragon", "中"))
+        Tile.setImageId(nullTile.id, listOf("0", "null_tile", ""))
 
-        tile_character1Image.setOnLongClickListener(longClicListner)
-        tile_character2Image.setOnLongClickListener(longClicListner)
-        tile_character3Image.setOnLongClickListener(longClicListner)
-        tile_character4Image.setOnLongClickListener(longClicListner)
-        tile_character5Image.setOnLongClickListener(longClicListner)
-        tile_character6Image.setOnLongClickListener(longClicListner)
-        tile_character7Image.setOnLongClickListener(longClicListner)
-        tile_character8Image.setOnLongClickListener(longClicListner)
-        tile_character9Image.setOnLongClickListener(longClicListner)
-        tile_circle1Image.setOnLongClickListener(longClicListner)
-        tile_circle2Image.setOnLongClickListener(longClicListner)
-        tile_circle3Image.setOnLongClickListener(longClicListner)
-        tile_circle4Image.setOnLongClickListener(longClicListner)
-        tile_circle5Image.setOnLongClickListener(longClicListner)
-        tile_circle6Image.setOnLongClickListener(longClicListner)
-        tile_circle7Image.setOnLongClickListener(longClicListner)
-        tile_circle8Image.setOnLongClickListener(longClicListner)
-        tile_circle9Image.setOnLongClickListener(longClicListner)
-        tile_bamboo1Image.setOnLongClickListener(longClicListner)
-        tile_bamboo2Image.setOnLongClickListener(longClicListner)
-        tile_bamboo3Image.setOnLongClickListener(longClicListner)
-        tile_bamboo4Image.setOnLongClickListener(longClicListner)
-        tile_bamboo5Image.setOnLongClickListener(longClicListner)
-        tile_bamboo6Image.setOnLongClickListener(longClicListner)
-        tile_bamboo7Image.setOnLongClickListener(longClicListner)
-        tile_bamboo8Image.setOnLongClickListener(longClicListner)
-        tile_bamboo9Image.setOnLongClickListener(longClicListner)
-        tile_eastImage.setOnLongClickListener(longClicListner)
-        tile_southImage.setOnLongClickListener(longClicListner)
-        tile_westImage.setOnLongClickListener(longClicListner)
-        tile_northImage.setOnLongClickListener(longClicListner)
-        tile_whiteDragonImage.setOnLongClickListener(longClicListner)
-        tile_greenDragonImage.setOnLongClickListener(longClicListner)
-        tile_redDragonImage.setOnLongClickListener(longClicListner)
+        tile_character1Image.setOnClickListener(tileClickListener)
+        tile_character2Image.setOnClickListener(tileClickListener)
+        tile_character3Image.setOnClickListener(tileClickListener)
+        tile_character4Image.setOnClickListener(tileClickListener)
+        tile_character5Image.setOnClickListener(tileClickListener)
+        tile_character6Image.setOnClickListener(tileClickListener)
+        tile_character7Image.setOnClickListener(tileClickListener)
+        tile_character8Image.setOnClickListener(tileClickListener)
+        tile_character9Image.setOnClickListener(tileClickListener)
+        tile_circle1Image.setOnClickListener(tileClickListener)
+        tile_circle2Image.setOnClickListener(tileClickListener)
+        tile_circle3Image.setOnClickListener(tileClickListener)
+        tile_circle4Image.setOnClickListener(tileClickListener)
+        tile_circle5Image.setOnClickListener(tileClickListener)
+        tile_circle6Image.setOnClickListener(tileClickListener)
+        tile_circle7Image.setOnClickListener(tileClickListener)
+        tile_circle8Image.setOnClickListener(tileClickListener)
+        tile_circle9Image.setOnClickListener(tileClickListener)
+        tile_bamboo1Image.setOnClickListener(tileClickListener)
+        tile_bamboo2Image.setOnClickListener(tileClickListener)
+        tile_bamboo3Image.setOnClickListener(tileClickListener)
+        tile_bamboo4Image.setOnClickListener(tileClickListener)
+        tile_bamboo5Image.setOnClickListener(tileClickListener)
+        tile_bamboo6Image.setOnClickListener(tileClickListener)
+        tile_bamboo7Image.setOnClickListener(tileClickListener)
+        tile_bamboo8Image.setOnClickListener(tileClickListener)
+        tile_bamboo9Image.setOnClickListener(tileClickListener)
+        tile_eastImage.setOnClickListener(tileClickListener)
+        tile_southImage.setOnClickListener(tileClickListener)
+        tile_westImage.setOnClickListener(tileClickListener)
+        tile_northImage.setOnClickListener(tileClickListener)
+        tile_whiteDragonImage.setOnClickListener(tileClickListener)
+        tile_greenDragonImage.setOnClickListener(tileClickListener)
+        tile_redDragonImage.setOnClickListener(tileClickListener)
 
-        hand1.setOnDragListener(dragListner)
-        hand1.setOnClickListener(clickListener)
-        hand2.setOnDragListener(dragListner)
-        hand2.setOnClickListener(clickListener)
-        hand3.setOnDragListener(dragListner)
-        hand3.setOnClickListener(clickListener)
-        hand4.setOnDragListener(dragListner)
-        hand4.setOnClickListener(clickListener)
-        hand5.setOnDragListener(dragListner)
-        hand5.setOnClickListener(clickListener)
-        hand6.setOnDragListener(dragListner)
-        hand6.setOnClickListener(clickListener)
-        hand7.setOnDragListener(dragListner)
-        hand7.setOnClickListener(clickListener)
-        hand8.setOnDragListener(dragListner)
-        hand8.setOnClickListener(clickListener)
-        hand9.setOnDragListener(dragListner)
-        hand9.setOnClickListener(clickListener)
-        hand10.setOnDragListener(dragListner)
-        hand10.setOnClickListener(clickListener)
-        hand11.setOnDragListener(dragListner)
-        hand11.setOnClickListener(clickListener)
-        hand12.setOnDragListener(dragListner)
-        hand12.setOnClickListener(clickListener)
-        hand13.setOnDragListener(dragListner)
-        hand13.setOnClickListener(clickListener)
-        hand14.setOnDragListener(dragListner)
-        hand14.setOnClickListener(clickListener)
+        hand1.setOnLongClickListener(longClickListener)
+        hand2.setOnLongClickListener(longClickListener)
+        hand3.setOnLongClickListener(longClickListener)
+        hand4.setOnLongClickListener(longClickListener)
+        hand5.setOnLongClickListener(longClickListener)
+        hand6.setOnLongClickListener(longClickListener)
+        hand7.setOnLongClickListener(longClickListener)
+        hand8.setOnLongClickListener(longClickListener)
+        hand9.setOnLongClickListener(longClickListener)
+        hand10.setOnLongClickListener(longClickListener)
+        hand11.setOnLongClickListener(longClickListener)
+        hand12.setOnLongClickListener(longClickListener)
+        hand13.setOnLongClickListener(longClickListener)
+        handDraw.setOnLongClickListener(longClickListener)
+
+        /*
+        hand1.setOnClickListener(handClickListener)
+        hand2.setOnClickListener(handClickListener)
+        hand3.setOnClickListener(handClickListener)
+        hand4.setOnClickListener(handClickListener)
+        hand5.setOnClickListener(handClickListener)
+        hand6.setOnClickListener(handClickListener)
+        hand7.setOnClickListener(handClickListener)
+        hand8.setOnClickListener(handClickListener)
+        hand9.setOnClickListener(handClickListener)
+        hand10.setOnClickListener(handClickListener)
+        hand11.setOnClickListener(handClickListener)
+        hand12.setOnClickListener(handClickListener)
+        hand13.setOnClickListener(handClickListener)
+
+         */
+
+
+        discardArea.setOnDragListener(dragListener)
+
 
         handViewId = mapOf(hand1.id to 1, hand2.id to 2, hand3.id to 3, hand4.id to 4, hand5.id to 5, hand6.id to 6, hand7.id to 7,
-            hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, hand14.id to 14)
+            hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, handDraw.id to 14)
 
         changeHand(hand1, tile_character1Image.id)
         changeHand(hand2, tile_character9Image.id)
@@ -351,12 +408,22 @@ class HandFragment : Fragment(R.layout.activity_main){
         changeHand(hand11, tile_whiteDragonImage.id)
         changeHand(hand12, tile_greenDragonImage.id)
         changeHand(hand13, tile_redDragonImage.id)
-        changeHand(hand14, tile_character1Image.id)
 
+        wall.removeAll(hand.getHand())
 
         pungButton.setOnClickListener(claimButtonListener("pung"))
         chowButton.setOnClickListener(claimButtonListener("chow"))
         kongButton.setOnClickListener(claimButtonListener("kong"))
+
+        val roundAdapter = ArrayAdapter(ContextGetter.applicationContext(), android.R.layout.simple_spinner_item, spinnerItem)
+        roundAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        round.adapter = roundAdapter
+        round.setSelection(0)
+
+        val windAdapter = ArrayAdapter(ContextGetter.applicationContext(), android.R.layout.simple_spinner_item, spinnerItem)
+        windAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        wind.adapter = windAdapter
+        wind.setSelection(0)
     }
 }
 
@@ -372,7 +439,7 @@ private class MyDragShadowBuilder(v: View) : View.DragShadowBuilder(v) {
         val width: Int = view.width / 2
 
         // Sets the height of the shadow to half the height of the original View
-        val height: Int = view.height + 50
+        val height: Int = view.height + 10
 
         size.set(view.width, view.height)
         touch.set(width,height);

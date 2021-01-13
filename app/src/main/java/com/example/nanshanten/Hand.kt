@@ -4,6 +4,7 @@ import android.util.Log
 
 class Hand{
     private lateinit var tiles: MutableList<Tile>
+    private lateinit var drawTile: Tile
     private lateinit var pungs: MutableList<Tile>
     private lateinit var chows: MutableList<Tile>
     private lateinit var kongs: MutableList<Tile>
@@ -14,7 +15,8 @@ class Hand{
             Tile(Tile.Type.BAMBOO, 1), Tile(Tile.Type.BAMBOO, 9),
             Tile(Tile.Type.WIND, 1), Tile(Tile.Type.WIND, 2), Tile(Tile.Type.WIND, 3),
             Tile(Tile.Type.WIND, 4), Tile(Tile.Type.DRAGON, 1), Tile(Tile.Type.DRAGON, 2),
-            Tile(Tile.Type.DRAGON, 3), Tile(Tile.Type.CIRCLE, 1))
+            Tile(Tile.Type.DRAGON, 3))
+        drawTile = Tile(Tile.Type.UNDEFINED, 0)
         pungs = mutableListOf()
         chows = mutableListOf()
         kongs = mutableListOf()
@@ -38,6 +40,22 @@ class Hand{
 
     fun getHand(): MutableList<Tile>{
         return tiles
+    }
+
+    fun setDraw(tile: Tile){
+        drawTile = tile
+    }
+
+    fun discardTile(index: Int){
+        if(index != 14){
+            tiles.removeAt(index - 1)
+            tiles.add(drawTile!!)
+        }
+        drawTile = Tile(Tile.Type.UNDEFINED, 0)
+    }
+
+    fun getDraw(): Tile{
+        return drawTile
     }
 
     fun getSortAllHand(): MutableList<Tile>{

@@ -70,6 +70,7 @@ class Tile(private val type: Type, private val number: Int){
             Type.BAMBOO -> { text = bambooTextMap.get(num)!!; imageTitle = "bamboo" + num.toString() }
             Type.WIND -> { text = windTextMap.get(num)!!; imageTitle = windTitleMap.get(num)!! }
             Type.DRAGON -> { text = dragonTextMap.get(num)!!; imageTitle = dragonTitleMap.get(num)!! }
+            else -> { text = ""; imageTitle = "null_tile"}
         }
     }
 

@@ -27,13 +27,12 @@
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <Spinner
                     android:id="@+id/round"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="東"
-                    android:textSize="20sp" />
+                    android:layout_width="100dp"
+                    android:layout_height="22dp"
+                    android:splitMotionEvents="false" />
+
 
                 <TextView
                     android:id="@+id/roundNum"
@@ -68,28 +67,77 @@
                     android:text="本場"
                     android:textSize="20sp"
                     android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/windText"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="あなたの風"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/wind"
+                    android:layout_width="100dp"
+                    android:layout_height="22dp"
+                    android:splitMotionEvents="false" />
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/discardArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="2dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/discardText"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:text="捨て牌"
                     android:textSize="20sp" />
 
-                <ImageView
-                    android:id="@+id/discard"
+                <LinearLayout
+                    android:id="@+id/discardTiles"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/editbox_dropdown_light_frame" />
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/discardNull"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:orientation="vertical"
+                        android:paddingLeft="2dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
+
+                        <ImageView
+                            android:id="@+id/discardNullImage"
+                            android:layout_width="30dp"
+                            android:layout_height="42dp"
+                            app:srcCompat="@drawable/null_tile" />
+
+                        <TextView
+                            android:id="@+id/discardNullText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text=""
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -124,6 +172,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="bottom"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -132,9 +181,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand1Image"
@@ -148,7 +201,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -157,9 +210,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand2Image"
@@ -173,7 +230,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -182,9 +239,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand3Image"
@@ -198,7 +259,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -207,9 +268,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand4Image"
@@ -223,7 +288,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -232,9 +297,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand5Image"
@@ -248,7 +317,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -257,9 +326,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand6Image"
@@ -273,7 +346,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -282,9 +355,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand7Image"
@@ -298,7 +375,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -307,9 +384,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand8Image"
@@ -323,7 +404,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -332,9 +413,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand9Image"
@@ -348,7 +433,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -357,9 +442,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand10Image"
@@ -373,7 +462,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -382,9 +471,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand11Image"
@@ -398,7 +491,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -407,9 +500,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand12Image"
@@ -423,7 +520,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -432,9 +529,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp">
 
                         <ImageView
                             android:id="@+id/hand13Image"
@@ -448,18 +549,22 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="白"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/nullTile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="1.05"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
+                        android:paddingLeft="4dp"
+                        android:paddingTop="2dp"
+                        android:paddingRight="4dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/nullTileImage"
@@ -473,32 +578,216 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text=""
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/hand14"
+                        android:id="@+id/drawArea"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="0.991"
+                        android:background="@drawable/black_border"
                         android:orientation="vertical"
-                        android:paddingLeft="1dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="1dp">
-
-                        <ImageView
-                            android:id="@+id/hand14Image"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            app:srcCompat="@drawable/whitedragon" />
+                        android:padding="2dp">
 
                         <TextView
-                            android:id="@+id/hand14Text"
+                            android:id="@+id/drawAreaText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="-5dp"
+                            android:gravity="center"
+                            android:text="ツモ"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:id="@+id/handDraw"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp">
+
+                            <ImageView
+                                android:id="@+id/handDrawImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="68dp"
+                                app:srcCompat="@drawable/whitedragon" />
+
+                            <TextView
+                                android:id="@+id/handDrawText"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="-4dp"
+                                android:gravity="center"
+                                android:text="白"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="0.845"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/opponentAreaText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="白"
-                            android:textSize="18sp" />
+                            android:text="他家の捨て牌"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:id="@+id/opponentArea"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/black_border"
+                            android:orientation="horizontal"
+                            android:paddingLeft="3dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="3dp"
+                            android:paddingBottom="3dp">
+
+                            <LinearLayout
+                                android:id="@+id/leftPlayerArea"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:padding="2dp">
+
+                                <TextView
+                                    android:id="@+id/leftPlayerAreaText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="上家"
+                                    android:textSize="16sp" />
+
+                                <LinearLayout
+                                    android:id="@+id/discardLeftPlayer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp">
+
+                                    <ImageView
+                                        android:id="@+id/discardLeftPlayerImage"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="60dp"
+                                        app:srcCompat="@drawable/whitedragon" />
+
+                                    <TextView
+                                        android:id="@+id/discardLeftPlayerText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:gravity="center"
+                                        android:text="白"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/oppositePlayerArea"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:padding="2dp">
+
+                                <TextView
+                                    android:id="@+id/oppositePlayerAreaText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="対面"
+                                    android:textSize="16sp" />
+
+                                <LinearLayout
+                                    android:id="@+id/discardOppositePlayer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp">
+
+                                    <ImageView
+                                        android:id="@+id/discardOppositePlayerImage"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="60dp"
+                                        app:srcCompat="@drawable/whitedragon" />
+
+                                    <TextView
+                                        android:id="@+id/discardOppositePlayerText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:gravity="center"
+                                        android:text="白"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/rightPlayerArea"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:padding="2dp">
+
+                                <TextView
+                                    android:id="@+id/rightPlayerAreaText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="下家"
+                                    android:textSize="16sp" />
+
+                                <LinearLayout
+                                    android:id="@+id/discardRightPlayer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp">
+
+                                    <ImageView
+                                        android:id="@+id/discardRightPlayerImage"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="60dp"
+                                        app:srcCompat="@drawable/whitedragon" />
+
+                                    <TextView
+                                        android:id="@+id/discardRightPlayerText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:gravity="center"
+                                        android:text="白"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -508,19 +797,19 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingLeft="1dp"
+                    android:paddingLeft="2dp"
                     android:paddingTop="5dp"
-                    android:paddingRight="1dp">
+                    android:paddingRight="2dp">
 
                     <Button
                         android:id="@+id/pungButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="ポン"
-                        android:textSize="18sp"
                         android:layout_marginLeft="7dp"
                         android:layout_marginRight="7dp"
+                        android:text="ポン"
+                        android:textSize="16sp"
                         android:visibility="gone" />
 
                     <Button
@@ -528,10 +817,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="チー"
-                        android:textSize="18sp"
                         android:layout_marginLeft="7dp"
                         android:layout_marginRight="7dp"
+                        android:text="チー"
+                        android:textSize="16sp"
                         android:visibility="gone" />
 
                     <Button
@@ -539,10 +828,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="カン"
-                        android:textSize="18sp"
                         android:layout_marginLeft="7dp"
                         android:layout_marginRight="7dp"
+                        android:text="カン"
+                        android:textSize="16sp"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -632,7 +921,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="一萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -656,7 +945,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="二萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -680,7 +969,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="三萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -704,7 +993,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="四萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -728,7 +1017,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="五萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -752,7 +1041,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="六萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -776,7 +1065,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="七萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -800,7 +1089,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="八萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -824,7 +1113,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="九萬"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -854,7 +1143,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="一筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -878,7 +1167,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="二筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -902,7 +1191,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="三筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -926,7 +1215,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="四筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -950,7 +1239,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="五筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -974,7 +1263,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="六筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -998,7 +1287,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="七筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1022,7 +1311,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="八筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1046,7 +1335,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="九筒"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -1076,7 +1365,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="一索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1100,7 +1389,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="二索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1124,7 +1413,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="三索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1148,7 +1437,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="四索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1172,7 +1461,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="五索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1196,7 +1485,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="六索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1220,7 +1509,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="七索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1244,7 +1533,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="八索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1268,7 +1557,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="九索"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -1298,7 +1587,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="東"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1322,7 +1611,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="南"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1346,7 +1635,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="西"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1370,7 +1659,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="北"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1394,7 +1683,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="白"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1418,7 +1707,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="發"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -1442,7 +1731,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="中"
-                                    android:textSize="18sp" />
+                                    android:textSize="16sp" />
                             </LinearLayout>
 
                         </LinearLayout>
