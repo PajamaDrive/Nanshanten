@@ -5,6 +5,7 @@ import android.content.ClipDescription
 import android.drm.DrmStore
 import android.graphics.Canvas
 import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -20,13 +21,7 @@ import org.w3c.dom.Text
 
 
 class HandFragment : Fragment(R.layout.activity_main){
-/*
-    val doubleClickListener = View.OnGenericMotionListener {
 
-    }
-
-
- */
     val dragListener = View.OnDragListener { v, event ->
         // Handles each of the expected events
         when (event.action) {
@@ -47,7 +42,11 @@ class HandFragment : Fragment(R.layout.activity_main){
                 true
             }
             DragEvent.ACTION_DROP -> {
-                discardTile(v, Integer.parseInt(event.clipData.getItemAt(0).text.toString()))
+                discardArea.background = null
+                if (hand.getDraw().getType() != Tile.Type.UNDEFINED) {
+                    discardTile(v, Integer.parseInt(event.clipData.getItemAt(0).text.toString()))
+                    changePlayer()
+                }
                 v.invalidate()
                 true
             }
@@ -79,6 +78,7 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
     }
 
+    /*
     val handClickListener = View.OnClickListener { v: View ->
         if(selectedHand.indexOf(handViewId.get(v.id)!! - 1) == -1){
             if(selectedHand.size < 4) {
@@ -92,9 +92,10 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
         canClaim()
     }
+    */
 
     val tileClickListener = View.OnClickListener { v: View ->
-        changeDraw(v)
+        changeHand(handNumToLayout.get(14 + currentPlayer)!!, v.id)
     }
 
     val claimButtonListener = { type: String ->
@@ -108,7 +109,7 @@ class HandFragment : Fragment(R.layout.activity_main){
                 val layout = LinearLayout(ContextGetter.applicationContext())
                 val imageView = ImageView(ContextGetter.applicationContext())
                 val textView = TextView(ContextGetter.applicationContext())
-                val handView = activity!!.findViewById<LinearLayout>(handViewId.keys.elementAt(sortedSelected.get(index)))
+                val handView = handNumToLayout.get(sortedSelected.get(index) + 1)!!
                 val imageId = resources.getIdentifier(Tile.getTileIdTextByText((handView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
                 layout.orientation = LinearLayout.VERTICAL
                 imageView.setImageResource(imageId)
@@ -141,9 +142,36 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
     }
 
-    lateinit var handViewId: Map<Int, Int>
+    val opponentClaimButtonListener = { type: String, player: Int ->
+        View.OnClickListener { v: View ->
+            (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(0) as ImageView).setImageResource(R.drawable.null_tile)
+            (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text = ""
+            if (type.equals("pung") || type.equals("chow")) {
+                changePlayer(player)
+            }
+            if (type.equals("kong")) {
+                changePlayer((player + 1) % 4)
+            }
+            changeClaimButtonVisivility(View.GONE)
+
+        }
+    }
+
+    val confirmButtonListener = View.OnClickListener { v: View ->
+        if(!(handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text.toString().equals("")) {
+            discardTile(discardArea, handNumToLayout.get(14 + currentPlayer)!!.id)
+            changePlayer()
+        }
+    }
+
+    lateinit var handIdToNum: Map<Int, Int>
+    lateinit var handNumToLayout: MutableMap<Int, LinearLayout>
     val hand = Hand()
     val wall = Wall()
+    //0:自分，1:下家，2:対面，3:上家
+    val discards = mutableListOf(DiscardTiles(), DiscardTiles(), DiscardTiles(), DiscardTiles())
+    var currentPlayer = 0
+    lateinit var discardView: Map<Int, LinearLayout>
     val selectedHand = mutableListOf<Int>()
     val spinnerItem = arrayOf("東", "南", "西", "北")
 
@@ -169,15 +197,16 @@ class HandFragment : Fragment(R.layout.activity_main){
             val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
             (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
             (view.getChildAt(1) as TextView).text = tileText
-            if(selectedHand.indexOf(handViewId.get(view.id)!! - 1) != -1) {
-                selectedHand.remove(handViewId.get(view.id)!! - 1)
+            if(selectedHand.indexOf(handIdToNum.get(view.id)!! - 1) != -1) {
+                selectedHand.remove(handIdToNum.get(view.id)!! - 1)
                 canClaim()
             }
-            if(handViewId.get(view.id)!! <= hand.getHand().size) {
-                hand.changeTile(handViewId.get(view.id)!! - 1, tile)
-                Log.d("debug", "change at hand" + handViewId.get(view.id)!!.toString() + ", " + hand.getTile(handViewId.get(view.id)!! - 1).toString())
+            if(handIdToNum.get(view.id)!! <= hand.getHand().size) {
+                hand.changeTile(handIdToNum.get(view.id)!! - 1, tile)
+                Log.d("debug", "change at hand" + handIdToNum.get(view.id)!!.toString() + ", " + hand.getTile(handIdToNum.get(view.id)!! - 1).toString())
             }
-            else {
+            else if(handIdToNum.get(view.id)!! == 14) {
+
                 hand.setDraw(tile)
                 Log.d("debug", "change at draw, " + hand.getDraw().toString())
             }
@@ -186,43 +215,52 @@ class HandFragment : Fragment(R.layout.activity_main){
         updateView()
     }
 
-    fun changeDraw(view: View) {
-        val drawView = activity!!.findViewById<LinearLayout>(handViewId.keys.elementAt(handViewId.keys.size - 1))
-        changeHand(drawView, view.id)
-    }
 
     fun discardTile(view: View, id: Int){
         view.background = null
 
-        if(hand.getDraw().getType() != Tile.Type.UNDEFINED){
-            if(((discardTiles.getChildAt(0) as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))
-                discardTiles.removeViewAt(0)
+        if(((discardView.get(currentPlayer)!!.getChildAt(0) as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))
+            discardView.get(currentPlayer)!!.removeViewAt(0)
 
-            val layout = LinearLayout(ContextGetter.applicationContext())
-            val imageView = ImageView(ContextGetter.applicationContext())
-            val textView = TextView(ContextGetter.applicationContext())
-            val handView = activity!!.findViewById<LinearLayout>(id)
-            val imageId = resources.getIdentifier(Tile.getTileIdTextByText((handView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
-            layout.orientation = LinearLayout.VERTICAL
-            imageView.setImageResource(imageId)
-            imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(30),dpToPx(43))
-            textView.text = (handView.getChildAt(1) as TextView).text
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.0f)
-            textView.gravity = Gravity.CENTER
+        val layout = LinearLayout(ContextGetter.applicationContext())
+        val imageView = ImageView(ContextGetter.applicationContext())
+        val textView = TextView(ContextGetter.applicationContext())
+        val tileView = activity!!.findViewById<LinearLayout>(id)
+        val imageId = resources.getIdentifier(Tile.getTileIdTextByText((tileView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
+        val tileText = (tileView.getChildAt(1) as TextView).text.toString()
+        layout.orientation = LinearLayout.VERTICAL
+        imageView.setImageResource(imageId)
+        imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(20),dpToPx(27))
+        textView.text = tileText
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
+        textView.gravity = Gravity.CENTER
 
-            layout.addView(imageView)
-            layout.addView(textView)
+        layout.addView(imageView)
+        layout.addView(textView)
 
-            val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-            layoutMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(2), dpToPx(0))
-            layout.layoutParams = layoutMarginParams
-            discardTiles.addView(layout)
+        val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+        layoutMarginParams.setMargins(dpToPx(1), dpToPx(0), dpToPx(1), dpToPx(0))
+        layout.layoutParams = layoutMarginParams
+        discardView.get(currentPlayer)!!.addView(layout)
 
+        if(currentPlayer == 0) {
             wall.remove(hand.getDraw())
-            hand.discardTile(handViewId.get(id)!!)
-
-            updateView()
+            if (handIdToNum.get(id)!! == 14) {
+                discards.get(0).pushHand(hand.getDraw())
+            } else {
+                discards.get(0).pushHand(hand.getTile(handIdToNum.get(id)!! - 1))
+            }
+            hand.discardTile(handIdToNum.get(id)!! - 1)
         }
+        else{
+            val tile = Tile(Tile.getTileTypeByText(tileText), Tile.getTileNumberByText(tileText))
+            wall.remove(tile)
+            discards.get(currentPlayer).pushHand(tile)
+            (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(0) as ImageView).setImageResource(R.drawable.null_tile)
+            (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text = ""
+        }
+
+        updateView()
     }
 
     fun canClaim(){
@@ -245,10 +283,58 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
     }
 
+    fun changePlayer(num: Int = 0){
+        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).background = null
+        if(num == 0){
+            currentPlayer = (currentPlayer + 1) % 4
+        }
+        else {
+            currentPlayer = num
+        }
+        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
+        if(currentPlayer == 0) {
+            confirmButton.visibility = View.GONE
+        }
+        else {
+            confirmButton.visibility = View.VISIBLE
+        }
+        changeClaimButtonVisivility(View.VISIBLE)
+        changeClaimButtonVisivility(View.GONE, (currentPlayer + 3) % 4)
+        Log.d("current", currentPlayer.toString())
+    }
+
+    fun changeClaimButtonVisivility(param: Int, player: Int = -1){
+        if(player == -1) {
+            rightPungButton.visibility = param
+            rightKongButton.visibility = param
+            oppositePungButton.visibility = param
+            oppositeKongButton.visibility = param
+            leftPungButton.visibility = param
+            leftKongButton.visibility = param
+        }
+        else{
+            when(player){
+                1 ->{
+                    rightPungButton.visibility = View.GONE
+                    rightKongButton.visibility = View.GONE
+                }
+                2 ->{
+                    oppositePungButton.visibility = View.GONE
+                    oppositeKongButton.visibility = View.GONE
+                }
+                3 ->{
+                    leftPungButton.visibility = View.GONE
+                    leftKongButton.visibility = View.GONE
+                }
+                else -> {}
+            }
+        }
+    }
+
     fun updateView(){
         hand.sortHand()
         for(index in 1..14) {
-            val handView = activity!!.findViewById<LinearLayout>(handViewId.keys.elementAt(index - 1))
+            val handView = handNumToLayout.get(index)!!
             if(index != 14){
                 if (hand.getHand().size >= index) {
                     val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getHand().get(index - 1).toString()), "drawable", "com.example.nanshanten")
@@ -389,11 +475,30 @@ class HandFragment : Fragment(R.layout.activity_main){
          */
 
 
+        pungButton.setOnClickListener(claimButtonListener("pung"))
+        chowButton.setOnClickListener(claimButtonListener("chow"))
+        kongButton.setOnClickListener(claimButtonListener("kong"))
         discardArea.setOnDragListener(dragListener)
+        confirmButton.setOnClickListener(confirmButtonListener)
+        rightPungButton.setOnClickListener(opponentClaimButtonListener("pung", 1))
+        rightKongButton.setOnClickListener(opponentClaimButtonListener("kong", 1))
+        oppositePungButton.setOnClickListener(opponentClaimButtonListener("pung", 2))
+        oppositeKongButton.setOnClickListener(opponentClaimButtonListener("kong", 2))
+        leftPungButton.setOnClickListener(opponentClaimButtonListener("pung", 3))
+        leftKongButton.setOnClickListener(opponentClaimButtonListener("kong", 3))
+        changeClaimButtonVisivility(View.GONE)
 
 
-        handViewId = mapOf(hand1.id to 1, hand2.id to 2, hand3.id to 3, hand4.id to 4, hand5.id to 5, hand6.id to 6, hand7.id to 7,
-            hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, handDraw.id to 14)
+        handIdToNum = mapOf(hand1.id to 1, hand2.id to 2, hand3.id to 3, hand4.id to 4, hand5.id to 5, hand6.id to 6, hand7.id to 7,
+            hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, handDraw.id to 14,
+        discardRightPlayer.id to 15, discardOppositePlayer.id to 16, discardLeftPlayer.id to 17)
+
+        handNumToLayout = mutableMapOf()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            handIdToNum.forEach { id, num -> handNumToLayout.set(num, activity!!.findViewById(id)) }
+        }
+
+        discardView = mapOf(0 to discardPlayerTiles, 1 to discardRightTiles, 2 to discardOppositeTiles, 3 to discardLeftTiles)
 
         changeHand(hand1, tile_character1Image.id)
         changeHand(hand2, tile_character9Image.id)
@@ -410,10 +515,6 @@ class HandFragment : Fragment(R.layout.activity_main){
         changeHand(hand13, tile_redDragonImage.id)
 
         wall.removeAll(hand.getHand())
-
-        pungButton.setOnClickListener(claimButtonListener("pung"))
-        chowButton.setOnClickListener(claimButtonListener("chow"))
-        kongButton.setOnClickListener(claimButtonListener("kong"))
 
         val roundAdapter = ArrayAdapter(ContextGetter.applicationContext(), android.R.layout.simple_spinner_item, spinnerItem)
         roundAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

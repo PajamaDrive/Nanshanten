@@ -54,6 +54,32 @@ class Tile(private val type: Type, private val number: Int){
         fun getTileIdTextByText(text: String): String{
             return imageIdMap.values.toList().find { it.get(2).equals(text) }!!.get(1)
         }
+
+        fun getTileTypeByText(text: String): Type{
+            return when{
+                Regex("萬").containsMatchIn(text) -> {Type.CHARACTER}
+                Regex("筒").containsMatchIn(text) -> {Type.CIRCLE}
+                Regex("索").containsMatchIn(text) -> {Type.BAMBOO}
+                Regex("東|南|西|北").containsMatchIn(text) -> {Type.WIND}
+                Regex("白|發|中").containsMatchIn(text) -> {Type.DRAGON}
+                else -> {Type.UNDEFINED}
+            }
+        }
+
+        fun getTileNumberByText(text: String): Int{
+            return when{
+                Regex("一|東|白").containsMatchIn(text) -> 1
+                Regex("二|南|發").containsMatchIn(text) -> 2
+                Regex("三|西|中").containsMatchIn(text) -> 3
+                Regex("四|北").containsMatchIn(text) -> 4
+                Regex("五").containsMatchIn(text) -> 5
+                Regex("六").containsMatchIn(text) -> 6
+                Regex("七").containsMatchIn(text) -> 7
+                Regex("八").containsMatchIn(text) -> 8
+                Regex("九").containsMatchIn(text) -> 9
+                else -> 0
+            }
+        }
     }
 
     private lateinit var text: String

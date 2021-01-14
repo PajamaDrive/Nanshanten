@@ -101,44 +101,268 @@
                     android:textSize="20sp" />
 
                 <LinearLayout
-                    android:id="@+id/discardTiles"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
-
                     <LinearLayout
-                        android:id="@+id/discardNull"
-                        android:layout_width="wrap_content"
+                    android:id="@+id/allDiscardPlayerArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/allDiscardPlayerText"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginRight="1dp"
-                        android:orientation="vertical"
-                        android:paddingLeft="2dp"
-                        android:paddingTop="2dp"
-                        android:paddingRight="2dp"
-                        android:paddingBottom="2dp">
+                        android:layout_marginLeft="5dp"
+                        android:text="あなた"
+                        android:textSize="20sp" />
 
-                        <ImageView
-                            android:id="@+id/discardNullImage"
-                            android:layout_width="30dp"
-                            android:layout_height="42dp"
-                            app:srcCompat="@drawable/null_tile" />
-
-                        <TextView
-                            android:id="@+id/discardNullText"
+                        <LinearLayout
+                            android:id="@+id/discardPlayerTiles"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text=""
-                            android:textSize="16sp" />
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/discardPlayerNull"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:orientation="vertical"
+                                android:paddingLeft="1dp"
+                                android:paddingTop="1dp"
+                                android:paddingRight="1dp"
+                                android:paddingBottom="1dp">
+
+                                <ImageView
+                                    android:id="@+id/discardPlayerNullImage"
+                                    android:layout_width="15dp"
+                                    android:layout_height="21dp"
+                                    app:srcCompat="@drawable/null_tile" />
+
+                                <TextView
+                                    android:id="@+id/discardPlayerNullText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/allDiscardRightArea"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/allDiscardRightText"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="下家"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/discardRightTiles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/discardRightNull"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:orientation="vertical"
+                                android:paddingLeft="2dp"
+                                android:paddingTop="2dp"
+                                android:paddingRight="2dp"
+                                android:paddingBottom="2dp">
+
+                                <ImageView
+                                    android:id="@+id/discardRightNullImage"
+                                    android:layout_width="15dp"
+                                    android:layout_height="21dp"
+                                    app:srcCompat="@drawable/null_tile" />
+
+                                <TextView
+                                    android:id="@+id/discardRightNullText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/allDiscardOppositeArea"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/allDiscardOppositeText"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="対面"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/discardOppositeTiles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/discardOppositeNull"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:orientation="vertical"
+                                android:paddingLeft="2dp"
+                                android:paddingTop="2dp"
+                                android:paddingRight="2dp"
+                                android:paddingBottom="2dp">
+
+                                <ImageView
+                                    android:id="@+id/discardOppositeNullImage"
+                                    android:layout_width="15dp"
+                                    android:layout_height="21dp"
+                                    app:srcCompat="@drawable/null_tile" />
+
+                                <TextView
+                                    android:id="@+id/discardOppositeNullText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/allDiscardLeftArea"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/allDiscardLeftText"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="上家"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/discardLeftTiles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/discardLeftNull"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:layout_marginRight="1dp"
+                                android:orientation="vertical"
+                                android:paddingLeft="2dp"
+                                android:paddingTop="2dp"
+                                android:paddingRight="2dp"
+                                android:paddingBottom="2dp">
+
+                                <ImageView
+                                    android:id="@+id/discardLeftNullImage"
+                                    android:layout_width="15dp"
+                                    android:layout_height="21dp"
+                                    app:srcCompat="@drawable/null_tile" />
+
+                                <TextView
+                                    android:id="@+id/discardLeftNullText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text=""
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/claimArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/claimText"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="鳴いた牌"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/claimTiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -589,7 +813,7 @@
                         android:layout_marginRight="2dp"
                         android:layout_marginBottom="3dp"
                         android:layout_weight="0.991"
-                        android:background="@drawable/black_border"
+                        android:background="@drawable/border"
                         android:orientation="vertical"
                         android:padding="2dp">
 
@@ -657,7 +881,7 @@
                             android:paddingBottom="3dp">
 
                             <LinearLayout
-                                android:id="@+id/leftPlayerArea"
+                                android:id="@+id/rightPlayerArea"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="1dp"
@@ -667,15 +891,15 @@
                                 android:padding="2dp">
 
                                 <TextView
-                                    android:id="@+id/leftPlayerAreaText"
+                                    android:id="@+id/rightPlayerAreaText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:gravity="center"
-                                    android:text="上家"
+                                    android:text="下家"
                                     android:textSize="16sp" />
 
                                 <LinearLayout
-                                    android:id="@+id/discardLeftPlayer"
+                                    android:id="@+id/discardRightPlayer"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -684,18 +908,18 @@
                                     android:paddingRight="2dp">
 
                                     <ImageView
-                                        android:id="@+id/discardLeftPlayerImage"
+                                        android:id="@+id/discardRightPlayerImage"
                                         android:layout_width="match_parent"
                                         android:layout_height="60dp"
-                                        app:srcCompat="@drawable/whitedragon" />
+                                        app:srcCompat="@drawable/null_tile" />
 
                                     <TextView
-                                        android:id="@+id/discardLeftPlayerText"
+                                        android:id="@+id/discardRightPlayerText"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_marginTop="0dp"
                                         android:gravity="center"
-                                        android:text="白"
+                                        android:text=""
                                         android:textSize="16sp" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -731,7 +955,7 @@
                                         android:id="@+id/discardOppositePlayerImage"
                                         android:layout_width="match_parent"
                                         android:layout_height="60dp"
-                                        app:srcCompat="@drawable/whitedragon" />
+                                        app:srcCompat="@drawable/null_tile" />
 
                                     <TextView
                                         android:id="@+id/discardOppositePlayerText"
@@ -739,13 +963,13 @@
                                         android:layout_height="match_parent"
                                         android:layout_marginTop="0dp"
                                         android:gravity="center"
-                                        android:text="白"
+                                        android:text=""
                                         android:textSize="16sp" />
                                 </LinearLayout>
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/rightPlayerArea"
+                                android:id="@+id/leftPlayerArea"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="1dp"
@@ -755,15 +979,15 @@
                                 android:padding="2dp">
 
                                 <TextView
-                                    android:id="@+id/rightPlayerAreaText"
+                                    android:id="@+id/leftPlayerAreaText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:gravity="center"
-                                    android:text="下家"
+                                    android:text="上家"
                                     android:textSize="16sp" />
 
                                 <LinearLayout
-                                    android:id="@+id/discardRightPlayer"
+                                    android:id="@+id/discardLeftPlayer"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -772,25 +996,24 @@
                                     android:paddingRight="2dp">
 
                                     <ImageView
-                                        android:id="@+id/discardRightPlayerImage"
+                                        android:id="@+id/discardLeftPlayerImage"
                                         android:layout_width="match_parent"
                                         android:layout_height="60dp"
-                                        app:srcCompat="@drawable/whitedragon" />
+                                        app:srcCompat="@drawable/null_tile" />
 
                                     <TextView
-                                        android:id="@+id/discardRightPlayerText"
+                                        android:id="@+id/discardLeftPlayerText"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_marginTop="0dp"
                                         android:gravity="center"
-                                        android:text="白"
+                                        android:text=""
                                         android:textSize="16sp" />
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -800,6 +1023,17 @@
                     android:paddingLeft="2dp"
                     android:paddingTop="5dp"
                     android:paddingRight="2dp">
+
+                    <Button
+                        android:id="@+id/confirmButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="決定"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/pungButton"
@@ -833,37 +1067,77 @@
                         android:text="カン"
                         android:textSize="16sp"
                         android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/claimArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical"
-                android:visibility="gone">
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="2dp">
 
-                    <TextView
-                        android:id="@+id/claimText"
-                        android:layout_width="100dp"
+                    <Button
+                        android:id="@+id/rightKongButton"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="鳴いた牌"
-                        android:textSize="20sp" />
-                </LinearLayout>
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="下家がカン"
+                        android:textSize="16sp" />
 
-                <LinearLayout
-                    android:id="@+id/claimTiles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/rightPungButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="下家がポン/チー"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/oppositeKongButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="対面がカン"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/oppositePungButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="対面がポン/チー"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/leftKongButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="上家がカン"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/leftPungButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:text="上家がポン/チー"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
             </LinearLayout>

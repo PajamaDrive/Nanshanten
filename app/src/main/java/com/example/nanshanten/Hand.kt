@@ -47,8 +47,8 @@ class Hand{
     }
 
     fun discardTile(index: Int){
-        if(index != 14){
-            tiles.removeAt(index - 1)
+        if(index != 13){
+            tiles.removeAt(index)
             tiles.add(drawTile!!)
         }
         drawTile = Tile(Tile.Type.UNDEFINED, 0)
