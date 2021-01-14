@@ -2,7 +2,6 @@ package com.example.nanshanten
 
 import android.content.ClipData
 import android.content.ClipDescription
-import android.drm.DrmStore
 import android.graphics.Canvas
 import android.graphics.Point
 import android.os.Build
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.w3c.dom.Text
@@ -78,22 +76,6 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
     }
 
-    /*
-    val handClickListener = View.OnClickListener { v: View ->
-        if(selectedHand.indexOf(handViewId.get(v.id)!! - 1) == -1){
-            if(selectedHand.size < 4) {
-                selectedHand.add(handViewId.get(v.id)!! - 1)
-                (v as LinearLayout).setBackgroundResource(R.drawable.click_border)
-            }
-        }
-        else{
-            selectedHand.remove(handViewId.get(v.id)!! - 1)
-            (v as LinearLayout).background = null
-        }
-        canClaim()
-    }
-    */
-
     val tileClickListener = View.OnClickListener { v: View ->
         changeHand(handNumToLayout.get(14 + currentPlayer)!!, v.id)
     }
@@ -151,6 +133,12 @@ class HandFragment : Fragment(R.layout.activity_main){
             }
             claimTiles.addView(layoutContainer)
             claimTileList.remove(discardUseTile)
+            discards.get((currentPlayer + 3) % 4).popHand()
+            var player = (currentPlayer + 3) % 4
+            while(player != 0){
+                discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
+                player = (player + 1) % 4
+            }
             if (type.equals("pung")) {
                 hand.pung(claimTileList, discardUseTile)
                 changePlayer(0)
@@ -167,7 +155,6 @@ class HandFragment : Fragment(R.layout.activity_main){
                 forceDraw()
             }
             updateView()
-
         }
     }
 
@@ -175,6 +162,7 @@ class HandFragment : Fragment(R.layout.activity_main){
         View.OnClickListener { v: View ->
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(0) as ImageView).setImageResource(R.drawable.null_tile)
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text = ""
+            discards.get((currentPlayer + 3) % 4).popHand()
             if (type.equals("pung") || type.equals("chow")) {
                 changePlayer(player)
             }
@@ -182,7 +170,7 @@ class HandFragment : Fragment(R.layout.activity_main){
                 changePlayer((player + 1) % 4)
             }
             changeClaimButtonVisivility(View.GONE)
-
+            updateView()
         }
     }
 
@@ -243,9 +231,6 @@ class HandFragment : Fragment(R.layout.activity_main){
 
     fun discardTile(view: View, id: Int){
         view.background = null
-
-        if(((discardView.get(currentPlayer)!!.getChildAt(0) as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))
-            discardView.get(currentPlayer)!!.removeViewAt(0)
 
         val layout = LinearLayout(ContextGetter.applicationContext())
         val imageView = ImageView(ContextGetter.applicationContext())
@@ -314,41 +299,6 @@ class HandFragment : Fragment(R.layout.activity_main){
                 }
             }
         }
-
-        /*
-        if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) {
-            val claimHand = hand.getHand().plusElement(discards.get((currentPlayer + 3) % 4).getLast()).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
-            if (currentPlayer == 0) {
-                pungButton.visibility = View.GONE
-                chowButton.visibility = View.GONE
-                if (TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) >= 1) {
-                    kongButton.visibility = View.VISIBLE
-                } else {
-                    kongButton.visibility = View.GONE
-                }
-            } else {
-                if (TileGroup.PUNG.getGroupListNum(claimHand) - TileGroup.PUNG.getGroupListNum(hand.getHandWithDraw()) >= 1) {
-                    pungButton.visibility = View.VISIBLE
-                } else {
-                    pungButton.visibility = View.GONE
-                }
-                if (currentPlayer == 3) {
-                    if (TileGroup.CHOW.getGroupListNum(claimHand) - TileGroup.CHOW.getGroupListNum(hand.getHandWithDraw()) >= 1
-                    ) {
-                        chowButton.visibility = View.VISIBLE
-                    } else {
-                        chowButton.visibility = View.GONE
-                    }
-                }
-                if (TileGroup.KONG.getGroupListNum(claimHand) - TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) >= 1) {
-                    kongButton.visibility = View.VISIBLE
-                } else {
-                    kongButton.visibility = View.GONE
-                }
-            }
-        }
-
-         */
     }
 
     fun changePlayer(num: Int = -1){
@@ -408,7 +358,6 @@ class HandFragment : Fragment(R.layout.activity_main){
                     oppositeChowButton.visibility = View.GONE
                     oppositeKongButton.visibility = View.GONE
                     rightChowButton.visibility = View.GONE
-
                 }
                 3 ->{
                     leftPungButton.visibility = View.GONE
@@ -452,7 +401,23 @@ class HandFragment : Fragment(R.layout.activity_main){
             }
             handView.background = null
         }
-        Log.d("wall", wall.getWall().toString())
+
+
+        for(player in (0..3)){
+            for(index in (0..discardView.get(player)!!.childCount - 1)){
+                val discardLayout = (discardView.get(player)!!.getChildAt(index) as LinearLayout)
+                if(index < discards.get(player).getHandWithoutNull().size){
+                    val imageId = resources.getIdentifier(Tile.getTileIdTextByText(discards.get(player).getHandWithoutNull().get(index).toString()), "drawable", "com.example.nanshanten")
+                    (discardLayout.getChildAt(0) as ImageView).setImageResource(imageId)
+                    (discardLayout.getChildAt(1) as TextView).text = discards.get(player).getHandWithoutNull().get(index).toString()
+                }
+                else{
+                    val imageId = resources.getIdentifier("null_tile", "drawable", "com.example.nanshanten")
+                    (discardLayout.getChildAt(0) as ImageView).setImageResource(imageId)
+                    (discardLayout.getChildAt(1) as TextView).text = ""
+                }
+            }
+        }
     }
 
     fun getDragImageId(dragId: Int): Int{
@@ -549,24 +514,6 @@ class HandFragment : Fragment(R.layout.activity_main){
         hand12.setOnLongClickListener(longClickListener)
         hand13.setOnLongClickListener(longClickListener)
         handDraw.setOnLongClickListener(longClickListener)
-
-        /*
-        hand1.setOnClickListener(handClickListener)
-        hand2.setOnClickListener(handClickListener)
-        hand3.setOnClickListener(handClickListener)
-        hand4.setOnClickListener(handClickListener)
-        hand5.setOnClickListener(handClickListener)
-        hand6.setOnClickListener(handClickListener)
-        hand7.setOnClickListener(handClickListener)
-        hand8.setOnClickListener(handClickListener)
-        hand9.setOnClickListener(handClickListener)
-        hand10.setOnClickListener(handClickListener)
-        hand11.setOnClickListener(handClickListener)
-        hand12.setOnClickListener(handClickListener)
-        hand13.setOnClickListener(handClickListener)
-
-         */
-
 
         pungButton.setOnClickListener(claimButtonListener("pung"))
         chowButton.setOnClickListener(claimButtonListener("chow"))

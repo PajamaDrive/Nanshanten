@@ -145,8 +145,8 @@
 
                                 <ImageView
                                     android:id="@+id/discardPlayerNullImage"
-                                    android:layout_width="15dp"
-                                    android:layout_height="21dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="27dp"
                                     app:srcCompat="@drawable/null_tile" />
 
                                 <TextView
@@ -201,8 +201,8 @@
 
                                 <ImageView
                                     android:id="@+id/discardRightNullImage"
-                                    android:layout_width="15dp"
-                                    android:layout_height="21dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="27dp"
                                     app:srcCompat="@drawable/null_tile" />
 
                                 <TextView
@@ -257,8 +257,8 @@
 
                                 <ImageView
                                     android:id="@+id/discardOppositeNullImage"
-                                    android:layout_width="15dp"
-                                    android:layout_height="21dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="27dp"
                                     app:srcCompat="@drawable/null_tile" />
 
                                 <TextView
@@ -313,8 +313,8 @@
 
                                 <ImageView
                                     android:id="@+id/discardLeftNullImage"
-                                    android:layout_width="15dp"
-                                    android:layout_height="21dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="27dp"
                                     app:srcCompat="@drawable/null_tile" />
 
                                 <TextView
