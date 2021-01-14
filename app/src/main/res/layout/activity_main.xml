@@ -334,38 +334,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/claimArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/claimText"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="鳴いた牌"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/claimTiles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -1084,63 +1052,94 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
                         android:text="下家がカン"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/rightPungButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
-                        android:text="下家がポン/チー"
-                        android:textSize="16sp" />
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="下家がポン"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/rightChowButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="下家がチー"
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/oppositeKongButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
                         android:text="対面がカン"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/oppositePungButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
-                        android:text="対面がポン/チー"
-                        android:textSize="16sp" />
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="対面がポン"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/oppositeChowButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="対面がチー"
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/leftKongButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
                         android:text="上家がカン"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/leftPungButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
-                        android:text="上家がポン/チー"
-                        android:textSize="16sp" />
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="上家がポン"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/leftChowButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="上家がチー"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -2015,6 +2014,39 @@
 
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/claimArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/claimText"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="鳴いた牌"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/claimTiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

@@ -18,4 +18,8 @@ class DiscardTiles {
     fun pushHand(tile: Tile){
         tiles.add(tile)
     }
+
+    fun getLast(): Tile{
+        return tiles.last()
+    }
 }

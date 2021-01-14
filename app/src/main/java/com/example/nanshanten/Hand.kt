@@ -42,6 +42,10 @@ class Hand{
         return tiles
     }
 
+    fun getHandWithDraw(): MutableList<Tile>{
+        return tiles.toMutableList().plusElement(drawTile).sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+    }
+
     fun setDraw(tile: Tile){
         drawTile = tile
     }
@@ -62,28 +66,31 @@ class Hand{
         return tiles.toMutableList().plus(chows).plus(pungs).plus(kongs).sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
     }
 
-    fun chow(indexes: MutableList<Int>){
-        val removedList = mutableListOf<Tile>()
-        for(index in indexes.sortedDescending()) {
-            removedList.add(tiles.removeAt(index))
+    fun chow(removeTiles: MutableList<Tile>, discardTile: Tile){
+        for(tile in removeTiles) {
+            chows.add(tiles.find { it.equals(tile) }!!)
+            tiles.remove(tile)
         }
-        chows.addAll(removedList)
+        if(discardTile.getType() != Tile.Type.UNDEFINED)
+            chows.add(discardTile)
     }
 
-    fun pung(indexes: MutableList<Int>){
-        val removedList = mutableListOf<Tile>()
-        for(index in indexes.sortedDescending()) {
-            removedList.add(tiles.removeAt(index))
+    fun pung(removeTiles: MutableList<Tile>, discardTile: Tile){
+        for(tile in removeTiles) {
+            pungs.add(tiles.find { it.equals(tile) }!!)
+            tiles.remove(tile)
         }
-        pungs.addAll(removedList)
+        if(discardTile.getType() != Tile.Type.UNDEFINED)
+            pungs.add(discardTile)
     }
 
-    fun kong(indexes: MutableList<Int>){
-        val removedList = mutableListOf<Tile>()
-        for(index in indexes.sortedDescending()) {
-            removedList.add(tiles.removeAt(index))
+    fun kong(removeTiles: MutableList<Tile>, discardTile: Tile){
+        for(tile in removeTiles) {
+            kongs.add(tiles.find { it.equals(tile) }!!)
+            tiles.remove(tile)
         }
-        kongs.addAll(removedList)
+        if(discardTile.getType() != Tile.Type.UNDEFINED)
+            kongs.add(discardTile)
     }
 
     fun getRemoveList(elements: MutableList<Tile>): MutableList<Tile>{
