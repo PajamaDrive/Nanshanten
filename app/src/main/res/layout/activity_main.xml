@@ -334,6 +334,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/handArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -371,15 +372,16 @@
                         android:id="@+id/hand1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand1Image"
@@ -400,15 +402,16 @@
                         android:id="@+id/hand2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand2Image"
@@ -429,15 +432,16 @@
                         android:id="@+id/hand3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand3Image"
@@ -458,15 +462,16 @@
                         android:id="@+id/hand4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand4Image"
@@ -487,15 +492,16 @@
                         android:id="@+id/hand5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand5Image"
@@ -516,15 +522,16 @@
                         android:id="@+id/hand6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand6Image"
@@ -545,15 +552,16 @@
                         android:id="@+id/hand7"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand7Image"
@@ -574,15 +582,16 @@
                         android:id="@+id/hand8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand8Image"
@@ -603,15 +612,16 @@
                         android:id="@+id/hand9"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand9Image"
@@ -632,15 +642,16 @@
                         android:id="@+id/hand10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand10Image"
@@ -661,15 +672,16 @@
                         android:id="@+id/hand11"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand11Image"
@@ -690,15 +702,16 @@
                         android:id="@+id/hand12"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand12Image"
@@ -719,15 +732,16 @@
                         android:id="@+id/hand13"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_marginLeft="1dp"
                         android:layout_marginRight="1dp"
                         android:layout_marginBottom="3dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
+                        android:layout_weight="1"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
                         android:paddingLeft="2dp"
-                        android:paddingRight="2dp">
+                        android:paddingTop="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="2dp">
 
                         <ImageView
                             android:id="@+id/hand13Image"
@@ -781,6 +795,7 @@
                         android:layout_marginRight="2dp"
                         android:layout_marginBottom="3dp"
                         android:layout_weight="0.991"
+                        android:gravity="bottom"
                         android:background="@drawable/border"
                         android:orientation="vertical"
                         android:padding="2dp">
@@ -799,6 +814,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="bottom"
                             android:orientation="vertical"
                             android:paddingLeft="2dp"
                             android:paddingRight="2dp">
@@ -992,6 +1008,26 @@
                     android:paddingTop="5dp"
                     android:paddingRight="2dp">
 
+                    <TextView
+                        android:id="@+id/operationText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="2dp">
+
                     <Button
                         android:id="@+id/confirmButton"
                         android:layout_width="wrap_content"
@@ -1035,17 +1071,6 @@
                         android:text="カン"
                         android:textSize="16sp"
                         android:visibility="gone" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="2dp">
 
                     <Button
                         android:id="@+id/rightKongButton"
@@ -1142,6 +1167,7 @@
 
 
             <LinearLayout
+                android:id="@+id/changeArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -2024,26 +2050,101 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/claimText"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="鳴いた牌"
-                        android:textSize="20sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/claimText"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="鳴いた牌"
+                    android:textSize="20sp" />
 
                 <LinearLayout
-                    android:id="@+id/claimTiles"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/playerClaimText"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="あなた"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/playerClaim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/rightClaimText"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="下家"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/rightClaim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/oppositeClaimText"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="対面"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/oppositeClaim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/leftClaimText"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="上家"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/leftClaim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

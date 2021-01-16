@@ -15,69 +15,29 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
-import org.w3c.dom.Text
+import kotlin.math.abs
 
 
 class HandFragment : Fragment(R.layout.activity_main){
-
-    val dragListener = View.OnDragListener { v, event ->
-        // Handles each of the expected events
-        when (event.action) {
-            DragEvent.ACTION_DRAG_STARTED -> {
-                // Determines if this View can accept the dragged data
-                if (event.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                    true
-                } else {
-                    false
-                }
-            }
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                (v as LinearLayout).setBackgroundResource(R.drawable.border)
-                true
-            }
-            DragEvent.ACTION_DRAG_EXITED -> {
-                (v as LinearLayout).background = null
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                discardArea.background = null
-                if (hand.getDraw().getType() != Tile.Type.UNDEFINED) {
-                    discardTile(v, Integer.parseInt(event.clipData.getItemAt(0).text.toString()))
-                    changePlayer()
-                }
-                v.invalidate()
-                true
-            }
-            else -> {
-                false
-            }
-        }
-    }
-
-    val longClickListener = View.OnLongClickListener { v: View ->
-
-        if(!(((v as LinearLayout).getChildAt(1) as TextView).text.toString().equals(""))) {
-            v.tag = v.id.toString()
-            // Create a new ClipData.Item from the ImageView object's tag
-            val item = ClipData.Item(v.tag as? CharSequence)
-
-            // Create a new ClipData using the tag as a label, the plain text MIME type, and
-            // the already-created item. This will create a new ClipDescription object within the
-            // ClipData, and set its MIME type entry to "text/plain"
-            val dragData =
-                ClipData(v.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
-
-            // Instantiates the drag shadow builder.
-            val myShadow = MyDragShadowBuilder(v)
-            // Starts the drag
-            v.startDrag(dragData, myShadow, null, 0)
-        }else{
-            false
-        }
-    }
-
     val tileClickListener = View.OnClickListener { v: View ->
         changeHand(handNumToLayout.get(14 + currentPlayer)!!, v.id)
+    }
+
+    val handClickListener = View.OnClickListener { v: View ->
+        if(touchHand.id != (v as LinearLayout).id){
+            changeSelectedHand(v, 20)
+            if(touchHand != nullTile)
+                changeSelectedHand(touchHand, -20)
+            touchHand = v
+        }
+        else{
+            changeSelectedHand(v, -20)
+            discardTile(v.id)
+            changePlayer()
+            touchHand = nullTile
+            enableHandListener(false)
+            enableTileListener(true)
+        }
     }
 
     val claimButtonListener = { type: String ->
@@ -92,8 +52,13 @@ class HandFragment : Fragment(R.layout.activity_main){
                 claimTileList = TileGroup.PUNG.getGroupList(claimHand).get(0)
             }
             else if(type.equals("chow")){
+                //ここにチーの牌を選択する処理を書く
                 val claimHand = hand.getHand().plusElement(preDiscardTile).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
-                claimTileList = TileGroup.CHOW.getGroupList(claimHand).get(0)
+                val chowNum = TileGroup.CHOW.getGroupListNum(claimHand) - TileGroup.CHOW.getGroupListNum(claimHand)
+                if(chowNum <= 1)
+                    claimTileList = TileGroup.CHOW.getGroupList(claimHand).get(0)
+                else
+                    Log.d("debug", TileGroup.CHOW.getGroupList(claimHand).distinctBy { it.get(0).toString() }.toString())
             }
             else if(type.equals("kong")){
                 val claimHand = hand.getHandWithDraw().plusElement(preDiscardTile).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
@@ -131,7 +96,7 @@ class HandFragment : Fragment(R.layout.activity_main){
                 containerMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(10), dpToPx(0))
                 layoutContainer.layoutParams = containerMarginParams
             }
-            claimTiles.addView(layoutContainer)
+            playerClaim.addView(layoutContainer)
             claimTileList.remove(discardUseTile)
             discards.get((currentPlayer + 3) % 4).popHand()
             var player = (currentPlayer + 3) % 4
@@ -153,6 +118,7 @@ class HandFragment : Fragment(R.layout.activity_main){
                 hand.kong(claimTileList, discardUseTile)
                 changePlayer(0)
                 forceDraw()
+                isKong = true
             }
             updateView()
         }
@@ -175,9 +141,20 @@ class HandFragment : Fragment(R.layout.activity_main){
     }
 
     val confirmButtonListener = View.OnClickListener { v: View ->
-        if(!(handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text.toString().equals("")) {
-            discardTile(discardArea, handNumToLayout.get(14 + currentPlayer)!!.id)
+        if(!isKong){
+            if(currentPlayer == 0){
+                if(hand.getDraw().getType() != Tile.Type.UNDEFINED)
+                    forceDiscard()
+            } else {
+                discardTile(handNumToLayout.get(14 + currentPlayer)!!.id)
+                changePlayer()
+                if(currentPlayer == 0){
+                    forceDraw()
+                }
+            }
+        } else {
             changePlayer()
+            isKong = false
         }
     }
 
@@ -190,7 +167,10 @@ class HandFragment : Fragment(R.layout.activity_main){
     var currentPlayer = 0
     lateinit var discardView: Map<Int, LinearLayout>
     val spinnerItem = arrayOf("東", "南", "西", "北")
-
+    val operationTextMap = mapOf(0 to "あなたのツモ牌を選択してください", 1 to "下家の捨て牌を選択してください", 2 to "対面の捨て牌を選択してください", 3 to "上家の捨て牌を選択してください")
+    val operationOrClaimTextMap = mapOf(0 to "下家の捨て牌を選択 or 鳴きを選択してください", 1 to "対面の捨て牌を選択 or 鳴きを選択してください", 2 to "上家の捨て牌を選択 or 鳴きを選択してください", 3 to "あなたのツモ牌を選択 or 鳴きを選択してください")
+    lateinit var touchHand: LinearLayout
+    var isKong = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -222,22 +202,22 @@ class HandFragment : Fragment(R.layout.activity_main){
                 hand.setDraw(tile)
                 Log.d("debug", "change at draw, " + hand.getDraw().toString())
             }
-            canClaim()
+            operationText.text = operationTextMap.get(currentPlayer)
+            changeClaimButtonVisivility(View.GONE)
             //yakuText.text = Yaku.getYakuList(hand).toString()
         }
         updateView()
     }
 
 
-    fun discardTile(view: View, id: Int){
-        view.background = null
-
+    fun discardTile(id: Int){
         val layout = LinearLayout(ContextGetter.applicationContext())
         val imageView = ImageView(ContextGetter.applicationContext())
         val textView = TextView(ContextGetter.applicationContext())
         val tileView = activity!!.findViewById<LinearLayout>(id)
         val imageId = resources.getIdentifier(Tile.getTileIdTextByText((tileView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
         val tileText = (tileView.getChildAt(1) as TextView).text.toString()
+
         layout.orientation = LinearLayout.VERTICAL
         imageView.setImageResource(imageId)
         imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(20),dpToPx(27))
@@ -273,104 +253,132 @@ class HandFragment : Fragment(R.layout.activity_main){
         updateView()
     }
 
-    fun canClaim(){
+    fun canClaim(): String{
+        var claimType = ""
         if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) {
             val previousDiscard = discards.get((currentPlayer + 3) % 4).getLast()
             val claimHand = hand.getHand().plusElement(previousDiscard).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
             if(hand.getDraw().getType() == Tile.Type.UNDEFINED){
                 if(TileGroup.PUNG.getGroupListNum(claimHand) >= 1 && TileGroup.PUNG.getGroupList(claimHand).flatten().find { it.equals(previousDiscard) } != null){
                     pungButton.visibility = View.VISIBLE
+                    claimType = claimType.plus("pung")
                 }
                 if(currentPlayer == 0) {
                     if (TileGroup.CHOW.getGroupListNum(claimHand) >= 1 && TileGroup.CHOW.getGroupList(claimHand).flatten().find { it.equals(previousDiscard) } != null) {
                         chowButton.visibility = View.VISIBLE
+                        claimType = claimType.plus("chow")
                     }
                 }
-                if(TileGroup.KONG.getGroupListNum(claimHand) >= 1 && currentPlayer == 0){
+                if(TileGroup.KONG.getGroupListNum(claimHand) - TileGroup.KONG.getGroupListNum(hand.getHandWithDraw())  >= 1){
                     kongButton.visibility = View.VISIBLE
+                    claimType = claimType.plus("kong")
                 }
             }else{
                 pungButton.visibility = View.GONE
                 chowButton.visibility = View.GONE
                 if (TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) >= 1) {
                     kongButton.visibility = View.VISIBLE
+                    claimType = claimType.plus("kong")
                 } else {
                     kongButton.visibility = View.GONE
                 }
             }
         }
+        return claimType
     }
 
     fun changePlayer(num: Int = -1){
         (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).background = null
         if(num == -1){
+            operationText.text = operationOrClaimTextMap.get(currentPlayer)
             currentPlayer = (currentPlayer + 1) % 4
+            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4)
         }
         else {
             currentPlayer = num
+            operationText.text = operationTextMap.get(currentPlayer)
+            changeClaimButtonVisivility(View.GONE)
         }
         (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
-        if(currentPlayer == 0) {
-            confirmButton.visibility = View.GONE
-        }
-        else {
-            confirmButton.visibility = View.VISIBLE
-        }
-        changeClaimButtonVisivility(View.VISIBLE)
-        changeClaimButtonVisivility(View.GONE, (currentPlayer + 3) % 4)
+
         canClaim()
     }
 
-    fun forceDraw(){
+    fun changeSelectedHand(view: View, dp:Int){
+        val layout = view as LinearLayout
+        val layoutMarginParams = (layout.layoutParams as ViewGroup.MarginLayoutParams)
+        layoutMarginParams.setMargins(layoutMarginParams.leftMargin, layoutMarginParams.topMargin, layoutMarginParams.rightMargin, layoutMarginParams.bottomMargin + dpToPx(dp))
+        layout.layoutParams = layoutMarginParams
+    }
 
+    fun forceDraw(){
+        if(discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().getType() != Tile.Type.UNDEFINED)
+            operationText.text = "あなたのツモ牌を選択 or 鳴きを選択してください"
+        else
+            operationText.text = "あなたのツモ牌を選択"
+        enableHandListener(false)
+        enableTileListener(true)
+        confirmButton.visibility = View.GONE
     }
 
     fun forceDiscard(){
-
+        if(Regex("kong").containsMatchIn(canClaim())){
+            operationText.text = "手牌から1つ捨てる or カンしてください"
+            confirmButton.visibility = View.GONE
+        } else{
+            operationText.text = "手牌から1つ捨ててください"
+            confirmButton.visibility = View.INVISIBLE
+        }
+        enableHandListener(true)
+        enableTileListener(false)
+        drawArea.background = null
     }
 
     fun changeClaimButtonVisivility(param: Int, player: Int = -1){
-        if(player == -1) {
-            pungButton.visibility = View.GONE
-            chowButton.visibility = View.GONE
-            kongButton.visibility = View.GONE
+        pungButton.visibility = View.GONE
+        chowButton.visibility = View.GONE
+        kongButton.visibility = View.GONE
 
-            rightPungButton.visibility = param
-            rightChowButton.visibility = param
-            rightKongButton.visibility = param
-            oppositePungButton.visibility = param
-            oppositeChowButton.visibility = param
-            oppositeKongButton.visibility = param
-            leftPungButton.visibility = param
-            leftChowButton.visibility = param
-            leftKongButton.visibility = param
-        }
-        else{
-            when(player){
-                1 ->{
-                    rightPungButton.visibility = View.GONE
-                    rightChowButton.visibility = View.GONE
-                    rightKongButton.visibility = View.GONE
-                    leftChowButton.visibility = View.GONE
-                }
-                2 ->{
-                    oppositePungButton.visibility = View.GONE
-                    oppositeChowButton.visibility = View.GONE
-                    oppositeKongButton.visibility = View.GONE
-                    rightChowButton.visibility = View.GONE
-                }
-                3 ->{
-                    leftPungButton.visibility = View.GONE
-                    leftChowButton.visibility = View.GONE
-                    leftKongButton.visibility = View.GONE
-                    oppositeChowButton.visibility = View.GONE
-                    rightChowButton.visibility = View.GONE
-                }
-                else -> {
-                    oppositeChowButton.visibility = View.GONE
-                    leftChowButton.visibility = View.GONE
-                }
+        rightPungButton.visibility = param
+        rightChowButton.visibility = param
+        rightKongButton.visibility = param
+        oppositePungButton.visibility = param
+        oppositeChowButton.visibility = param
+        oppositeKongButton.visibility = param
+        leftPungButton.visibility = param
+        leftChowButton.visibility = param
+        leftKongButton.visibility = param
+
+        if(param == View.VISIBLE)
+            confirmButton.visibility = View.GONE
+        else
+            confirmButton.visibility = View.VISIBLE
+
+        when(player){
+            0 -> {
+                oppositeChowButton.visibility = View.GONE
+                leftChowButton.visibility = View.GONE
             }
+            1 ->{
+                rightPungButton.visibility = View.GONE
+                rightChowButton.visibility = View.GONE
+                rightKongButton.visibility = View.GONE
+                leftChowButton.visibility = View.GONE
+            }
+            2 ->{
+                oppositePungButton.visibility = View.GONE
+                oppositeChowButton.visibility = View.GONE
+                oppositeKongButton.visibility = View.GONE
+                rightChowButton.visibility = View.GONE
+            }
+            3 ->{
+                leftPungButton.visibility = View.GONE
+                leftChowButton.visibility = View.GONE
+                leftKongButton.visibility = View.GONE
+                oppositeChowButton.visibility = View.GONE
+                rightChowButton.visibility = View.GONE
+            }
+            else -> { }
         }
     }
 
@@ -402,7 +410,6 @@ class HandFragment : Fragment(R.layout.activity_main){
             handView.background = null
         }
 
-
         for(player in (0..3)){
             for(index in (0..discardView.get(player)!!.childCount - 1)){
                 val discardLayout = (discardView.get(player)!!.getChildAt(index) as LinearLayout)
@@ -426,6 +433,115 @@ class HandFragment : Fragment(R.layout.activity_main){
 
     fun dpToPx(dp: Int): Int{
         return Math.round(resources.displayMetrics.density * dp)
+    }
+
+    fun enableHandListener(flag: Boolean){
+        if(flag){
+            hand1.setOnClickListener(handClickListener)
+            hand2.setOnClickListener(handClickListener)
+            hand3.setOnClickListener(handClickListener)
+            hand4.setOnClickListener(handClickListener)
+            hand5.setOnClickListener(handClickListener)
+            hand6.setOnClickListener(handClickListener)
+            hand7.setOnClickListener(handClickListener)
+            hand8.setOnClickListener(handClickListener)
+            hand9.setOnClickListener(handClickListener)
+            hand10.setOnClickListener(handClickListener)
+            hand11.setOnClickListener(handClickListener)
+            hand12.setOnClickListener(handClickListener)
+            hand13.setOnClickListener(handClickListener)
+            handDraw.setOnClickListener(handClickListener)
+        }
+        else{
+            hand1.setOnClickListener(null)
+            hand2.setOnClickListener(null)
+            hand3.setOnClickListener(null)
+            hand4.setOnClickListener(null)
+            hand5.setOnClickListener(null)
+            hand6.setOnClickListener(null)
+            hand7.setOnClickListener(null)
+            hand8.setOnClickListener(null)
+            hand9.setOnClickListener(null)
+            hand10.setOnClickListener(null)
+            hand11.setOnClickListener(null)
+            hand12.setOnClickListener(null)
+            hand13.setOnClickListener(null)
+            handDraw.setOnClickListener(null)
+        }
+    }
+
+    fun enableTileListener(flag: Boolean){
+        if(flag){
+            tile_character1Image.setOnClickListener(tileClickListener)
+            tile_character2Image.setOnClickListener(tileClickListener)
+            tile_character3Image.setOnClickListener(tileClickListener)
+            tile_character4Image.setOnClickListener(tileClickListener)
+            tile_character5Image.setOnClickListener(tileClickListener)
+            tile_character6Image.setOnClickListener(tileClickListener)
+            tile_character7Image.setOnClickListener(tileClickListener)
+            tile_character8Image.setOnClickListener(tileClickListener)
+            tile_character9Image.setOnClickListener(tileClickListener)
+            tile_circle1Image.setOnClickListener(tileClickListener)
+            tile_circle2Image.setOnClickListener(tileClickListener)
+            tile_circle3Image.setOnClickListener(tileClickListener)
+            tile_circle4Image.setOnClickListener(tileClickListener)
+            tile_circle5Image.setOnClickListener(tileClickListener)
+            tile_circle6Image.setOnClickListener(tileClickListener)
+            tile_circle7Image.setOnClickListener(tileClickListener)
+            tile_circle8Image.setOnClickListener(tileClickListener)
+            tile_circle9Image.setOnClickListener(tileClickListener)
+            tile_bamboo1Image.setOnClickListener(tileClickListener)
+            tile_bamboo2Image.setOnClickListener(tileClickListener)
+            tile_bamboo3Image.setOnClickListener(tileClickListener)
+            tile_bamboo4Image.setOnClickListener(tileClickListener)
+            tile_bamboo5Image.setOnClickListener(tileClickListener)
+            tile_bamboo6Image.setOnClickListener(tileClickListener)
+            tile_bamboo7Image.setOnClickListener(tileClickListener)
+            tile_bamboo8Image.setOnClickListener(tileClickListener)
+            tile_bamboo9Image.setOnClickListener(tileClickListener)
+            tile_eastImage.setOnClickListener(tileClickListener)
+            tile_southImage.setOnClickListener(tileClickListener)
+            tile_westImage.setOnClickListener(tileClickListener)
+            tile_northImage.setOnClickListener(tileClickListener)
+            tile_whiteDragonImage.setOnClickListener(tileClickListener)
+            tile_greenDragonImage.setOnClickListener(tileClickListener)
+            tile_redDragonImage.setOnClickListener(tileClickListener)
+        }else{
+            tile_character1Image.setOnClickListener(null)
+            tile_character2Image.setOnClickListener(null)
+            tile_character3Image.setOnClickListener(null)
+            tile_character4Image.setOnClickListener(null)
+            tile_character5Image.setOnClickListener(null)
+            tile_character6Image.setOnClickListener(null)
+            tile_character7Image.setOnClickListener(null)
+            tile_character8Image.setOnClickListener(null)
+            tile_character9Image.setOnClickListener(null)
+            tile_circle1Image.setOnClickListener(null)
+            tile_circle2Image.setOnClickListener(null)
+            tile_circle3Image.setOnClickListener(null)
+            tile_circle4Image.setOnClickListener(null)
+            tile_circle5Image.setOnClickListener(null)
+            tile_circle6Image.setOnClickListener(null)
+            tile_circle7Image.setOnClickListener(null)
+            tile_circle8Image.setOnClickListener(null)
+            tile_circle9Image.setOnClickListener(null)
+            tile_bamboo1Image.setOnClickListener(null)
+            tile_bamboo2Image.setOnClickListener(null)
+            tile_bamboo3Image.setOnClickListener(null)
+            tile_bamboo4Image.setOnClickListener(null)
+            tile_bamboo5Image.setOnClickListener(null)
+            tile_bamboo6Image.setOnClickListener(null)
+            tile_bamboo7Image.setOnClickListener(null)
+            tile_bamboo8Image.setOnClickListener(null)
+            tile_bamboo9Image.setOnClickListener(null)
+            tile_eastImage.setOnClickListener(null)
+            tile_southImage.setOnClickListener(null)
+            tile_westImage.setOnClickListener(null)
+            tile_northImage.setOnClickListener(null)
+            tile_whiteDragonImage.setOnClickListener(null)
+            tile_greenDragonImage.setOnClickListener(null)
+            tile_redDragonImage.setOnClickListener(null)
+        }
     }
 
     fun initiallize(){
@@ -465,60 +581,12 @@ class HandFragment : Fragment(R.layout.activity_main){
         Tile.setImageId(tile_redDragonImage.id, listOf("3", "reddragon", "中"))
         Tile.setImageId(nullTile.id, listOf("0", "null_tile", ""))
 
-        tile_character1Image.setOnClickListener(tileClickListener)
-        tile_character2Image.setOnClickListener(tileClickListener)
-        tile_character3Image.setOnClickListener(tileClickListener)
-        tile_character4Image.setOnClickListener(tileClickListener)
-        tile_character5Image.setOnClickListener(tileClickListener)
-        tile_character6Image.setOnClickListener(tileClickListener)
-        tile_character7Image.setOnClickListener(tileClickListener)
-        tile_character8Image.setOnClickListener(tileClickListener)
-        tile_character9Image.setOnClickListener(tileClickListener)
-        tile_circle1Image.setOnClickListener(tileClickListener)
-        tile_circle2Image.setOnClickListener(tileClickListener)
-        tile_circle3Image.setOnClickListener(tileClickListener)
-        tile_circle4Image.setOnClickListener(tileClickListener)
-        tile_circle5Image.setOnClickListener(tileClickListener)
-        tile_circle6Image.setOnClickListener(tileClickListener)
-        tile_circle7Image.setOnClickListener(tileClickListener)
-        tile_circle8Image.setOnClickListener(tileClickListener)
-        tile_circle9Image.setOnClickListener(tileClickListener)
-        tile_bamboo1Image.setOnClickListener(tileClickListener)
-        tile_bamboo2Image.setOnClickListener(tileClickListener)
-        tile_bamboo3Image.setOnClickListener(tileClickListener)
-        tile_bamboo4Image.setOnClickListener(tileClickListener)
-        tile_bamboo5Image.setOnClickListener(tileClickListener)
-        tile_bamboo6Image.setOnClickListener(tileClickListener)
-        tile_bamboo7Image.setOnClickListener(tileClickListener)
-        tile_bamboo8Image.setOnClickListener(tileClickListener)
-        tile_bamboo9Image.setOnClickListener(tileClickListener)
-        tile_eastImage.setOnClickListener(tileClickListener)
-        tile_southImage.setOnClickListener(tileClickListener)
-        tile_westImage.setOnClickListener(tileClickListener)
-        tile_northImage.setOnClickListener(tileClickListener)
-        tile_whiteDragonImage.setOnClickListener(tileClickListener)
-        tile_greenDragonImage.setOnClickListener(tileClickListener)
-        tile_redDragonImage.setOnClickListener(tileClickListener)
-
-        hand1.setOnLongClickListener(longClickListener)
-        hand2.setOnLongClickListener(longClickListener)
-        hand3.setOnLongClickListener(longClickListener)
-        hand4.setOnLongClickListener(longClickListener)
-        hand5.setOnLongClickListener(longClickListener)
-        hand6.setOnLongClickListener(longClickListener)
-        hand7.setOnLongClickListener(longClickListener)
-        hand8.setOnLongClickListener(longClickListener)
-        hand9.setOnLongClickListener(longClickListener)
-        hand10.setOnLongClickListener(longClickListener)
-        hand11.setOnLongClickListener(longClickListener)
-        hand12.setOnLongClickListener(longClickListener)
-        hand13.setOnLongClickListener(longClickListener)
-        handDraw.setOnLongClickListener(longClickListener)
+        enableTileListener(true)
+        forceDraw()
 
         pungButton.setOnClickListener(claimButtonListener("pung"))
         chowButton.setOnClickListener(claimButtonListener("chow"))
         kongButton.setOnClickListener(claimButtonListener("kong"))
-        discardArea.setOnDragListener(dragListener)
         confirmButton.setOnClickListener(confirmButtonListener)
         rightPungButton.setOnClickListener(opponentClaimButtonListener("pung", 1))
         rightChowButton.setOnClickListener(opponentClaimButtonListener("chow", 1))
@@ -529,8 +597,6 @@ class HandFragment : Fragment(R.layout.activity_main){
         leftPungButton.setOnClickListener(opponentClaimButtonListener("pung", 3))
         leftChowButton.setOnClickListener(opponentClaimButtonListener("chow", 3))
         leftKongButton.setOnClickListener(opponentClaimButtonListener("kong", 3))
-        changeClaimButtonVisivility(View.GONE)
-
 
         handIdToNum = mapOf(hand1.id to 1, hand2.id to 2, hand3.id to 3, hand4.id to 4, hand5.id to 5, hand6.id to 6, hand7.id to 7,
             hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, handDraw.id to 14,
@@ -542,6 +608,7 @@ class HandFragment : Fragment(R.layout.activity_main){
         }
 
         discardView = mapOf(0 to discardPlayerTiles, 1 to discardRightTiles, 2 to discardOppositeTiles, 3 to discardLeftTiles)
+        touchHand = nullTile
 
         changeHand(hand1, tile_character1Image.id)
         changeHand(hand2, tile_character9Image.id)
@@ -556,6 +623,10 @@ class HandFragment : Fragment(R.layout.activity_main){
         changeHand(hand11, tile_whiteDragonImage.id)
         changeHand(hand12, tile_greenDragonImage.id)
         changeHand(hand13, tile_redDragonImage.id)
+
+        changeClaimButtonVisivility(View.GONE)
+        forceDraw()
+        confirmButton.visibility = View.INVISIBLE
 
         wall.removeAll(hand.getHand())
 
