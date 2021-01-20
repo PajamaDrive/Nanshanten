@@ -100,7 +100,7 @@ class HandFragment : Fragment(R.layout.activity_main){
             claimTileList.remove(discardUseTile)
             discards.get((currentPlayer + 3) % 4).popHand()
             var player = (currentPlayer + 3) % 4
-            while(player != 0){
+            while(hand.getDraw().getType() == Tile.Type.UNDEFINED && player != 0){
                 discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
                 player = (player + 1) % 4
             }
@@ -115,11 +115,16 @@ class HandFragment : Fragment(R.layout.activity_main){
                 forceDiscard()
             }
             if (type.equals("kong")) {
+                isKong = true
                 hand.kong(claimTileList, discardUseTile)
                 changePlayer(0)
                 forceDraw()
-                isKong = true
             }
+            Log.d("debug", discards.get(0).getHand().toString())
+            Log.d("debug", discards.get(1).getHand().toString())
+            Log.d("debug", discards.get(2).getHand().toString())
+            Log.d("debug", discards.get(3).getHand().toString())
+
             updateView()
         }
     }
@@ -154,7 +159,10 @@ class HandFragment : Fragment(R.layout.activity_main){
             }
         } else {
             changePlayer()
+            wall.remove(hand.getDraw())
+            hand.addDrawToHand()
             isKong = false
+            updateView()
         }
     }
 
@@ -312,13 +320,16 @@ class HandFragment : Fragment(R.layout.activity_main){
     }
 
     fun forceDraw(){
-        if(discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().getType() != Tile.Type.UNDEFINED)
+        if(!isKong && discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().getType() != Tile.Type.UNDEFINED) {
             operationText.text = "あなたのツモ牌を選択 or 鳴きを選択してください"
-        else
+            confirmButton.visibility = View.GONE
+        }
+        else {
             operationText.text = "あなたのツモ牌を選択"
+            confirmButton.visibility = View.INVISIBLE
+        }
         enableHandListener(false)
         enableTileListener(true)
-        confirmButton.visibility = View.GONE
     }
 
     fun forceDiscard(){

@@ -58,6 +58,11 @@ class Hand{
         drawTile = Tile(Tile.Type.UNDEFINED, 0)
     }
 
+    fun addDrawToHand(){
+        tiles.add(drawTile!!)
+        drawTile = Tile(Tile.Type.UNDEFINED, 0)
+    }
+
     fun getDraw(): Tile{
         return drawTile
     }
@@ -85,6 +90,11 @@ class Hand{
     }
 
     fun kong(removeTiles: MutableList<Tile>, discardTile: Tile){
+        if(drawTile.getType() != Tile.Type.UNDEFINED){
+            kongs.add(removeTiles.get(0))
+            removeTiles.removeAt(0)
+            drawTile = Tile(Tile.Type.UNDEFINED, 0)
+        }
         for(tile in removeTiles) {
             kongs.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
