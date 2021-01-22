@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.abs
@@ -24,19 +25,21 @@ class HandFragment : Fragment(R.layout.activity_main){
     }
 
     val handClickListener = View.OnClickListener { v: View ->
-        if(touchHand.id != (v as LinearLayout).id){
-            changeSelectedHand(v, 20)
-            if(touchHand != nullTile)
-                changeSelectedHand(touchHand, -20)
-            touchHand = v
-        }
-        else{
-            changeSelectedHand(v, -20)
-            discardTile(v.id)
-            changePlayer()
-            touchHand = nullTile
-            enableHandListener(false)
-            enableTileListener(true)
+        if(!((v as LinearLayout).getChildAt(1) as TextView).text.toString().equals("")){
+            if(touchHand.id != (v as LinearLayout).id){
+                changeSelectedHand(v, 20)
+                if(touchHand != nullTile)
+                    changeSelectedHand(touchHand, -20)
+                touchHand = v
+            }
+            else{
+                changeSelectedHand(v, -20)
+                discardTile(v.id)
+                changePlayer()
+                touchHand = nullTile
+                enableHandListener(false)
+                enableTileListener(true)
+            }
         }
     }
 
@@ -148,6 +151,10 @@ class HandFragment : Fragment(R.layout.activity_main){
     val confirmButtonListener = View.OnClickListener { v: View ->
         if(!isKong){
             if(currentPlayer == 0){
+                wall.remove(hand.getDraw())
+                (tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(hand.getDraw()) + "枚"
+                if(wall.count(hand.getDraw()) == 0)
+                    disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!)
                 if(hand.getDraw().getType() != Tile.Type.UNDEFINED)
                     forceDiscard()
             } else {
@@ -160,6 +167,7 @@ class HandFragment : Fragment(R.layout.activity_main){
         } else {
             changePlayer()
             wall.remove(hand.getDraw())
+            (tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(hand.getDraw()) + "枚"
             hand.addDrawToHand()
             isKong = false
             updateView()
@@ -168,6 +176,7 @@ class HandFragment : Fragment(R.layout.activity_main){
 
     lateinit var handIdToNum: Map<Int, Int>
     lateinit var handNumToLayout: MutableMap<Int, LinearLayout>
+    lateinit var tileStringToLayout: Map<String, LinearLayout>
     val hand = Hand()
     val wall = Wall()
     //0:自分，1:下家，2:対面，3:上家
@@ -242,7 +251,6 @@ class HandFragment : Fragment(R.layout.activity_main){
         discardView.get(currentPlayer)!!.addView(layout)
 
         if(currentPlayer == 0) {
-            wall.remove(hand.getDraw())
             if (handIdToNum.get(id)!! == 14) {
                 discards.get(0).pushHand(hand.getDraw())
             } else {
@@ -253,6 +261,9 @@ class HandFragment : Fragment(R.layout.activity_main){
         else{
             val tile = Tile(Tile.getTileTypeByText(tileText), Tile.getTileNumberByText(tileText))
             wall.remove(tile)
+            (tileStringToLayout.get(Tile.getTileIdTextByText(tileText))!!.getChildAt(0) as TextView).text = "あと" + wall.count(tile) + "枚"
+            if(wall.count(tile) == 0)
+                disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(tileText))!!)
             discards.get(currentPlayer).pushHand(tile)
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(0) as ImageView).setImageResource(R.drawable.null_tile)
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text = ""
@@ -446,6 +457,11 @@ class HandFragment : Fragment(R.layout.activity_main){
         return Math.round(resources.displayMetrics.density * dp)
     }
 
+    fun disableTile(layout: LinearLayout){
+        (layout.getChildAt(0) as TextView).setTextColor(ContextCompat.getColor(ContextGetter.applicationContext(), R.color.colorAccent))
+        (layout.getChildAt(1) as ImageView).alpha = 0.1f
+    }
+
     fun enableHandListener(flag: Boolean){
         if(flag){
             hand1.setOnClickListener(handClickListener)
@@ -618,6 +634,15 @@ class HandFragment : Fragment(R.layout.activity_main){
             handIdToNum.forEach { id, num -> handNumToLayout.set(num, activity!!.findViewById(id)) }
         }
 
+        tileStringToLayout = mapOf("character1" to tile_character1, "character2" to tile_character2, "character3" to tile_character3,
+            "character4" to tile_character4, "character5" to tile_character5, "character6" to tile_character6, "character7" to tile_character7,
+            "character8" to tile_character8, "character9" to tile_character9, "circle1" to tile_circle1, "circle2" to tile_circle2, "circle3" to tile_circle3,
+            "circle4" to tile_circle4, "circle5" to tile_circle5, "circle6" to tile_circle6, "circle7" to tile_circle7,
+            "circle8" to tile_circle8, "circle9" to tile_circle9, "bamboo1" to tile_bamboo1, "bamboo2" to tile_bamboo2, "bamboo3" to tile_bamboo3,
+            "bamboo4" to tile_bamboo4, "bamboo5" to tile_bamboo5, "bamboo6" to tile_bamboo6, "bamboo7" to tile_bamboo7,
+            "bamboo8" to tile_bamboo8, "bamboo9" to tile_bamboo9, "east" to tile_east, "south" to tile_south, "west" to tile_west, "north" to tile_north,
+            "whitedragon" to tile_whiteDragon, "greendragon" to tile_greenDragon, "reddragon" to tile_redDragon)
+
         discardView = mapOf(0 to discardPlayerTiles, 1 to discardRightTiles, 2 to discardOppositeTiles, 3 to discardLeftTiles)
         touchHand = nullTile
 
@@ -640,6 +665,9 @@ class HandFragment : Fragment(R.layout.activity_main){
         confirmButton.visibility = View.INVISIBLE
 
         wall.removeAll(hand.getHand())
+        hand.getHand().forEach {
+            (tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(it) + "枚"
+        }
 
         val roundAdapter = ArrayAdapter(ContextGetter.applicationContext(), android.R.layout.simple_spinner_item, spinnerItem)
         roundAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

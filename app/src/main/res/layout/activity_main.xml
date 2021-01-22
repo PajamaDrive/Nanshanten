@@ -1200,11 +1200,20 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:id="@+id/tile_character1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character1Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character1Image"
@@ -1224,11 +1233,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character2Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character2Image"
@@ -1248,11 +1266,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character3Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character3Image"
@@ -1272,11 +1299,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character4Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character4Image"
@@ -1296,11 +1332,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character5Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character5Image"
@@ -1320,11 +1365,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character6Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character6Image"
@@ -1344,11 +1398,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character7Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character7Image"
@@ -1368,11 +1431,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character8"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character8Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character8Image"
@@ -1392,11 +1464,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_character9"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_character9Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_character9Image"
@@ -1422,11 +1503,20 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:id="@+id/tile_circle1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle1Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle1Image"
@@ -1446,11 +1536,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle2Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle2Image"
@@ -1470,11 +1569,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle3Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle3Image"
@@ -1494,11 +1602,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle4Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle4Image"
@@ -1518,11 +1635,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle5Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle5Image"
@@ -1542,11 +1668,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle6Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle6Image"
@@ -1566,11 +1701,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle7Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle7Image"
@@ -1590,11 +1734,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle8"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle8Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle8Image"
@@ -1614,11 +1767,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_circle9"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_circle9Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_circle9Image"
@@ -1644,11 +1806,20 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo1Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo1Image"
@@ -1668,11 +1839,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo2Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo2Image"
@@ -1692,11 +1872,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo3Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo3Image"
@@ -1716,11 +1905,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo4Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo4Image"
@@ -1740,11 +1938,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo5Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo5Image"
@@ -1764,11 +1971,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo6Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo6Image"
@@ -1788,11 +2004,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo7Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo7Image"
@@ -1812,11 +2037,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo8"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo8Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo8Image"
@@ -1836,11 +2070,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_bamboo9"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_bamboo9Num"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_bamboo9Image"
@@ -1866,11 +2109,20 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:id="@+id/tile_east"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_eastNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_eastImage"
@@ -1890,11 +2142,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_south"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_southNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_southImage"
@@ -1914,11 +2175,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_west"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_westNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_westImage"
@@ -1938,11 +2208,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_north"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_northNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_northImage"
@@ -1962,11 +2241,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_whiteDragon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_whiteDragonNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_whiteDragonImage"
@@ -1986,11 +2274,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_greenDragon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_greenDragonNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_greenDragonImage"
@@ -2010,11 +2307,20 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/tile_redDragon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="5dp"
                                 android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tile_redDragonNum"
+                                    android:layout_width="45dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="あと4枚"
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:id="@+id/tile_redDragonImage"
