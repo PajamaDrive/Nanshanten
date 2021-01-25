@@ -1,12 +1,6 @@
 package com.example.nanshanten
 
-import androidx.appcompat.app.AlertDialog
-import android.app.Dialog
-import android.content.ClipData
-import android.content.ClipDescription
-import android.content.DialogInterface
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.ClaimDialogListener{
     val tileClickListener = View.OnClickListener { v: View ->
-        changeHand(handNumToLayout.get(14 + currentPlayer)!!, v.id)
+        changeHand(handNumToLayout.get(14 + currentPlayer)!!, ((v as LinearLayout).getChildAt(1) as ImageView).id)
     }
 
     val handClickListener = View.OnClickListener { v: View ->
@@ -110,12 +104,11 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
         initiallize()
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment) {
-        Log.d("debug", "hoge")
+    override fun onDialogPositiveClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
+        createClaimView("chow", claimPlayer, dialog.getSelecteChow(), false, true)
     }
 
-    override fun onDialogNegativeClick(dialog: DialogFragment) {
-        Log.d("debug", "foo")
+    override fun onDialogNegativeClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
     }
 
     fun changeHand(view: View, id: Int) {
@@ -277,6 +270,12 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                 else{
                     val dialog = ClaimDialogFragment()
                     dialog.setFragment(this)
+                    dialog.setClaimPlayer(claimPlayer)
+
+                    val allChowList = TileGroup.CHOW.getGroupList(claimHand).distinctBy { it.get(0).toString() }
+                    for(claimTiles in allChowList)
+                        dialog.addChow(createClaimView("chow", claimPlayer, claimTiles, false, false), claimTiles)
+
                     dialog.show(fragmentManager!!, "ClaimDialogFragment")
                     return
                 }
@@ -295,13 +294,14 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                 claimTileList = mutableListOf(preDiscardTile, preDiscardTile, preDiscardTile, preDiscardTile)
             }
         }
-        addCreateView(type, claimPlayer, claimTileList, concealedKong)
+        createClaimView(type, claimPlayer, claimTileList, concealedKong, true)
     }
 
-    fun addCreateView(type: String, claimPlayer: Int, claimTileList: MutableList<Tile>, concealedKong: Boolean){
-        val preDiscardTile = discards.get((currentPlayer + 3) % 4).getLast()
+    fun createClaimView(type: String, claimPlayer: Int, claimTileList: MutableList<Tile>, concealedKong: Boolean, doAdd: Boolean): LinearLayout{
+        if(doAdd)
+            claimArea.visibility = View.VISIBLE
 
-        claimArea.visibility = View.VISIBLE
+        val preDiscardTile = discards.get((currentPlayer + 3) % 4).getLast()
         var layoutContainer = LinearLayout(ContextGetter.applicationContext())
         layoutContainer.orientation = LinearLayout.HORIZONTAL
 
@@ -336,7 +336,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                 discardUseTile = preDiscardTile
             layout.orientation = LinearLayout.VERTICAL
             imageView.setImageResource(imageId)
-            imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(22), dpToPx(29))
+            imageView.layoutParams = if(doAdd) LinearLayout.LayoutParams(dpToPx(22), dpToPx(29)) else LinearLayout.LayoutParams(dpToPx(28), dpToPx(36))
             if(claimPlayer == 0){
                 if((handView.getChildAt(1) as TextView).text.toString().equals(""))
                     textView.text = preDiscardTile.toString()
@@ -349,82 +349,93 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                     textView.text = (handView.getChildAt(2) as TextView).text
             }
 
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
+            if(doAdd)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
+            else
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0f)
             textView.gravity = Gravity.CENTER
 
-            if(!concealedKong){
-                if((currentPlayer + 3) % 4 == (3 - index + claimPlayer) % 4) {
-                    imageView.rotation = -90.0f
-                    imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29))
+            if(doAdd){
+                if(!concealedKong){
+                    if((currentPlayer + 3) % 4 == (3 - index + claimPlayer) % 4) {
+                        imageView.rotation = -90.0f
+                        imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29))
+                    }
+                } else{
+                    if(index == 0 || index == claimTileList.size - 1)
+                        imageView.setImageResource(resources.getIdentifier("tile_back", "drawable", "com.example.nanshanten"))
                 }
-            } else{
-                if(index == 0 || index == claimTileList.size - 1)
-                    imageView.setImageResource(resources.getIdentifier("tile_back", "drawable", "com.example.nanshanten"))
             }
 
             layout.addView(imageView)
             layout.addView(textView)
 
-            val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+            val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
             layoutMarginParams.setMargins(dpToPx(1), dpToPx(5), dpToPx(1), dpToPx(0))
             layout.layoutParams = layoutMarginParams
             layoutContainer.addView(layout)
-            val containerMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-            containerMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(10), dpToPx(0))
+            val containerMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+            if(doAdd)
+                containerMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(10), dpToPx(0))
+            else
+                containerMarginParams.setMargins(dpToPx(10), dpToPx(0), dpToPx(15), dpToPx(0))
             layoutContainer.layoutParams = containerMarginParams
         }
-        if(type.equals("kong") && !concealedKong){
-            if(claimPlayer == (currentPlayer + 2) % 4){
-                val thirdTileLayout = layoutContainer.getChildAt(2)
-                val forthTileLayout = layoutContainer.getChildAt(3)
-                layoutContainer.removeViewAt(2)
-                layoutContainer.removeViewAt(2)
-                layoutContainer.addView(forthTileLayout)
-                layoutContainer.addView(thirdTileLayout)
+        if(doAdd){
+            if(type.equals("kong") && !concealedKong){
+                if(claimPlayer == (currentPlayer + 2) % 4){
+                    val thirdTileLayout = layoutContainer.getChildAt(2)
+                    val forthTileLayout = layoutContainer.getChildAt(3)
+                    layoutContainer.removeViewAt(2)
+                    layoutContainer.removeViewAt(2)
+                    layoutContainer.addView(forthTileLayout)
+                    layoutContainer.addView(thirdTileLayout)
+                }
             }
+            claimLayout.get(claimPlayer)!!.addView(layoutContainer)
+            claimTileList.remove(discardUseTile)
+            discards.get((currentPlayer + 3) % 4).popHand()
+            var player = (currentPlayer + 3) % 4
+            while(hand.getDraw().getType() == Tile.Type.UNDEFINED && player != claimPlayer){
+                discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
+                player = (player + 1) % 4
+            }
+            if(claimPlayer == 0){
+                if (type.equals("pung")) {
+                    hand.pung(claimTileList, discardUseTile)
+                    changePlayer(claimPlayer)
+                    forceDiscard()
+                }
+                if (type.equals("chow")) {
+                    hand.chow(claimTileList, discardUseTile)
+                    changePlayer(claimPlayer)
+                    forceDiscard()
+                }
+                if (type.equals("kong")) {
+                    isKong = true
+                    hand.kong(claimTileList, discardUseTile)
+                    changePlayer(claimPlayer)
+                    forceDraw()
+                }
+            } else {
+                if (type.equals("pung") || type.equals("chow")) {
+                    changePlayer(player)
+                }
+                if (type.equals("kong")) {
+                    changePlayer((player + 1) % 4)
+                }
+                wall.removeAll(claimTileList)
+                claimTileList.forEach {
+                    (tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(it) + "枚"
+                    if(wall.count(it) == 0)
+                        disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!)
+                }
+            }
+            if(currentPlayer != 0)
+                changeClaimButtonVisivility(View.GONE)
+            updateView()
         }
-        claimLayout.get(claimPlayer)!!.addView(layoutContainer)
-        claimTileList.remove(discardUseTile)
-        discards.get((currentPlayer + 3) % 4).popHand()
-        var player = (currentPlayer + 3) % 4
-        while(hand.getDraw().getType() == Tile.Type.UNDEFINED && player != claimPlayer){
-            discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
-            player = (player + 1) % 4
-        }
-        if(claimPlayer == 0){
-            if (type.equals("pung")) {
-                hand.pung(claimTileList, discardUseTile)
-                changePlayer(claimPlayer)
-                forceDiscard()
-            }
-            if (type.equals("chow")) {
-                hand.chow(claimTileList, discardUseTile)
-                changePlayer(claimPlayer)
-                forceDiscard()
-            }
-            if (type.equals("kong")) {
-                isKong = true
-                hand.kong(claimTileList, discardUseTile)
-                changePlayer(claimPlayer)
-                forceDraw()
-            }
-        } else {
-            if (type.equals("pung") || type.equals("chow")) {
-                changePlayer(player)
-            }
-            if (type.equals("kong")) {
-                changePlayer((player + 1) % 4)
-            }
-            wall.removeAll(claimTileList)
-            claimTileList.forEach {
-                (tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(it) + "枚"
-                if(wall.count(it) == 0)
-                    disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!)
-            }
-        }
-        if(currentPlayer != 0)
-            changeClaimButtonVisivility(View.GONE)
-        updateView()
+        return layoutContainer
     }
 
     fun forceDiscard(){
@@ -583,75 +594,75 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
 
     fun enableTileListener(flag: Boolean){
         if(flag){
-            tile_character1Image.setOnClickListener(tileClickListener)
-            tile_character2Image.setOnClickListener(tileClickListener)
-            tile_character3Image.setOnClickListener(tileClickListener)
-            tile_character4Image.setOnClickListener(tileClickListener)
-            tile_character5Image.setOnClickListener(tileClickListener)
-            tile_character6Image.setOnClickListener(tileClickListener)
-            tile_character7Image.setOnClickListener(tileClickListener)
-            tile_character8Image.setOnClickListener(tileClickListener)
-            tile_character9Image.setOnClickListener(tileClickListener)
-            tile_circle1Image.setOnClickListener(tileClickListener)
-            tile_circle2Image.setOnClickListener(tileClickListener)
-            tile_circle3Image.setOnClickListener(tileClickListener)
-            tile_circle4Image.setOnClickListener(tileClickListener)
-            tile_circle5Image.setOnClickListener(tileClickListener)
-            tile_circle6Image.setOnClickListener(tileClickListener)
-            tile_circle7Image.setOnClickListener(tileClickListener)
-            tile_circle8Image.setOnClickListener(tileClickListener)
-            tile_circle9Image.setOnClickListener(tileClickListener)
-            tile_bamboo1Image.setOnClickListener(tileClickListener)
-            tile_bamboo2Image.setOnClickListener(tileClickListener)
-            tile_bamboo3Image.setOnClickListener(tileClickListener)
-            tile_bamboo4Image.setOnClickListener(tileClickListener)
-            tile_bamboo5Image.setOnClickListener(tileClickListener)
-            tile_bamboo6Image.setOnClickListener(tileClickListener)
-            tile_bamboo7Image.setOnClickListener(tileClickListener)
-            tile_bamboo8Image.setOnClickListener(tileClickListener)
-            tile_bamboo9Image.setOnClickListener(tileClickListener)
-            tile_eastImage.setOnClickListener(tileClickListener)
-            tile_southImage.setOnClickListener(tileClickListener)
-            tile_westImage.setOnClickListener(tileClickListener)
-            tile_northImage.setOnClickListener(tileClickListener)
-            tile_whiteDragonImage.setOnClickListener(tileClickListener)
-            tile_greenDragonImage.setOnClickListener(tileClickListener)
-            tile_redDragonImage.setOnClickListener(tileClickListener)
+            tile_character1.setOnClickListener(tileClickListener)
+            tile_character2.setOnClickListener(tileClickListener)
+            tile_character3.setOnClickListener(tileClickListener)
+            tile_character4.setOnClickListener(tileClickListener)
+            tile_character5.setOnClickListener(tileClickListener)
+            tile_character6.setOnClickListener(tileClickListener)
+            tile_character7.setOnClickListener(tileClickListener)
+            tile_character8.setOnClickListener(tileClickListener)
+            tile_character9.setOnClickListener(tileClickListener)
+            tile_circle1.setOnClickListener(tileClickListener)
+            tile_circle2.setOnClickListener(tileClickListener)
+            tile_circle3.setOnClickListener(tileClickListener)
+            tile_circle4.setOnClickListener(tileClickListener)
+            tile_circle5.setOnClickListener(tileClickListener)
+            tile_circle6.setOnClickListener(tileClickListener)
+            tile_circle7.setOnClickListener(tileClickListener)
+            tile_circle8.setOnClickListener(tileClickListener)
+            tile_circle9.setOnClickListener(tileClickListener)
+            tile_bamboo1.setOnClickListener(tileClickListener)
+            tile_bamboo2.setOnClickListener(tileClickListener)
+            tile_bamboo3.setOnClickListener(tileClickListener)
+            tile_bamboo4.setOnClickListener(tileClickListener)
+            tile_bamboo5.setOnClickListener(tileClickListener)
+            tile_bamboo6.setOnClickListener(tileClickListener)
+            tile_bamboo7.setOnClickListener(tileClickListener)
+            tile_bamboo8.setOnClickListener(tileClickListener)
+            tile_bamboo9.setOnClickListener(tileClickListener)
+            tile_east.setOnClickListener(tileClickListener)
+            tile_south.setOnClickListener(tileClickListener)
+            tile_west.setOnClickListener(tileClickListener)
+            tile_north.setOnClickListener(tileClickListener)
+            tile_whiteDragon.setOnClickListener(tileClickListener)
+            tile_greenDragon.setOnClickListener(tileClickListener)
+            tile_redDragon.setOnClickListener(tileClickListener)
         }else{
-            tile_character1Image.setOnClickListener(null)
-            tile_character2Image.setOnClickListener(null)
-            tile_character3Image.setOnClickListener(null)
-            tile_character4Image.setOnClickListener(null)
-            tile_character5Image.setOnClickListener(null)
-            tile_character6Image.setOnClickListener(null)
-            tile_character7Image.setOnClickListener(null)
-            tile_character8Image.setOnClickListener(null)
-            tile_character9Image.setOnClickListener(null)
-            tile_circle1Image.setOnClickListener(null)
-            tile_circle2Image.setOnClickListener(null)
-            tile_circle3Image.setOnClickListener(null)
-            tile_circle4Image.setOnClickListener(null)
-            tile_circle5Image.setOnClickListener(null)
-            tile_circle6Image.setOnClickListener(null)
-            tile_circle7Image.setOnClickListener(null)
-            tile_circle8Image.setOnClickListener(null)
-            tile_circle9Image.setOnClickListener(null)
-            tile_bamboo1Image.setOnClickListener(null)
-            tile_bamboo2Image.setOnClickListener(null)
-            tile_bamboo3Image.setOnClickListener(null)
-            tile_bamboo4Image.setOnClickListener(null)
-            tile_bamboo5Image.setOnClickListener(null)
-            tile_bamboo6Image.setOnClickListener(null)
-            tile_bamboo7Image.setOnClickListener(null)
-            tile_bamboo8Image.setOnClickListener(null)
-            tile_bamboo9Image.setOnClickListener(null)
-            tile_eastImage.setOnClickListener(null)
-            tile_southImage.setOnClickListener(null)
-            tile_westImage.setOnClickListener(null)
-            tile_northImage.setOnClickListener(null)
-            tile_whiteDragonImage.setOnClickListener(null)
-            tile_greenDragonImage.setOnClickListener(null)
-            tile_redDragonImage.setOnClickListener(null)
+            tile_character1.setOnClickListener(null)
+            tile_character2.setOnClickListener(null)
+            tile_character3.setOnClickListener(null)
+            tile_character4.setOnClickListener(null)
+            tile_character5.setOnClickListener(null)
+            tile_character6.setOnClickListener(null)
+            tile_character7.setOnClickListener(null)
+            tile_character8.setOnClickListener(null)
+            tile_character9.setOnClickListener(null)
+            tile_circle1.setOnClickListener(null)
+            tile_circle2.setOnClickListener(null)
+            tile_circle3.setOnClickListener(null)
+            tile_circle4.setOnClickListener(null)
+            tile_circle5.setOnClickListener(null)
+            tile_circle6.setOnClickListener(null)
+            tile_circle7.setOnClickListener(null)
+            tile_circle8.setOnClickListener(null)
+            tile_circle9.setOnClickListener(null)
+            tile_bamboo1.setOnClickListener(null)
+            tile_bamboo2.setOnClickListener(null)
+            tile_bamboo3.setOnClickListener(null)
+            tile_bamboo4.setOnClickListener(null)
+            tile_bamboo5.setOnClickListener(null)
+            tile_bamboo6.setOnClickListener(null)
+            tile_bamboo7.setOnClickListener(null)
+            tile_bamboo8.setOnClickListener(null)
+            tile_bamboo9.setOnClickListener(null)
+            tile_east.setOnClickListener(null)
+            tile_south.setOnClickListener(null)
+            tile_west.setOnClickListener(null)
+            tile_north.setOnClickListener(null)
+            tile_whiteDragon.setOnClickListener(null)
+            tile_greenDragon.setOnClickListener(null)
+            tile_redDragon.setOnClickListener(null)
         }
     }
 
