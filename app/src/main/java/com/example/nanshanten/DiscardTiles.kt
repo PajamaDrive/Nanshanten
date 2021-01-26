@@ -8,7 +8,7 @@ class DiscardTiles {
     }
 
     fun getSortedHand(): MutableList<Tile>{
-        return tiles.sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+        return tiles.sortedWith(compareBy({it.type}, {it.number})).toMutableList()
     }
 
     fun getHand(): MutableList<Tile>{

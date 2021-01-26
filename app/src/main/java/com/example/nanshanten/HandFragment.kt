@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.ClaimDialogListener{
+class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.DialogListener{
     val tileClickListener = View.OnClickListener { v: View ->
         changeHand(handNumToLayout.get(14 + currentPlayer)!!, ((v as LinearLayout).getChildAt(1) as ImageView).id)
     }
@@ -56,7 +56,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                 (tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(hand.getDraw()) + "枚"
                 if(wall.count(hand.getDraw()) == 0)
                     disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!)
-                if(hand.getDraw().getType() != Tile.Type.UNDEFINED)
+                if(hand.getDraw().type != Tile.Type.UNDEFINED)
                     forceDiscard()
             } else {
                 discardTile(handNumToLayout.get(14 + currentPlayer)!!.id)
@@ -67,6 +67,9 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
             }
         } else {
             changePlayer()
+            changeClaimButtonVisivility(View.GONE)
+            confirmButton.visibility = View.INVISIBLE
+            operationText.text = operationTextMap.get(currentPlayer)
             wall.remove(hand.getDraw())
             (tileStringToLayout.get(Tile.getTileIdTextByText(hand.getDraw().toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(hand.getDraw()) + "枚"
             hand.addDrawToHand()
@@ -83,6 +86,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
     val wall = Wall()
     //0:自分，1:下家，2:対面，3:上家
     val discards = mutableListOf(DiscardTiles(), DiscardTiles(), DiscardTiles(), DiscardTiles())
+    val pungs = mutableListOf(mutableMapOf<Tile, Int>(), mutableMapOf<Tile, Int>(), mutableMapOf<Tile, Int>(), mutableMapOf<Tile, Int>())
     var currentPlayer = 0
     lateinit var discardView: Map<Int, LinearLayout>
     val spinnerItem = arrayOf("東", "南", "西", "北")
@@ -105,7 +109,14 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
     }
 
     override fun onDialogPositiveClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
-        createClaimView("chow", claimPlayer, dialog.getSelecteChow(), false, true)
+        if(Regex("Chow").containsMatchIn(Throwable().stackTrace[1].className))
+            createClaimView("chow", claimPlayer, (dialog as ChowDialogFragment).selectedChow, false, true)
+        if(Regex("Kong").containsMatchIn(Throwable().stackTrace[1].className)){
+            var concealedKong = false
+            if(TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) != 0)
+                concealedKong = true
+            createClaimView("kong", claimPlayer, (dialog as KongDialogFragment).selectedKong, concealedKong, true)
+        }
     }
 
     override fun onDialogNegativeClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
@@ -185,8 +196,8 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
         var claimType = ""
         if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) {
             val previousDiscard = discards.get((currentPlayer + 3) % 4).getLast()
-            val claimHand = hand.getHand().plusElement(previousDiscard).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
-            if(hand.getDraw().getType() == Tile.Type.UNDEFINED){
+            val claimHand = hand.getHand().plusElement(previousDiscard).sortedWith(compareBy({ it.type }, { it.number })).toMutableList()
+            if(hand.getDraw().type == Tile.Type.UNDEFINED){
                 if(TileGroup.PUNG.getGroupListNum(claimHand) >= 1 && TileGroup.PUNG.getGroupList(claimHand).flatten().find { it.equals(previousDiscard) } != null){
                     pungButton.visibility = View.VISIBLE
                     claimType = claimType.plus("pung")
@@ -211,21 +222,40 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                     kongButton.visibility = View.GONE
                 }
             }
+        } else{
+            pungButton.visibility = View.GONE
+            chowButton.visibility = View.GONE
+            if (TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) >= 1) {
+                kongButton.visibility = View.VISIBLE
+                claimType = claimType.plus("kong")
+            } else {
+                kongButton.visibility = View.GONE
+            }
         }
         return claimType
     }
 
     fun changePlayer(num: Int = -1){
         (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).background = null
+
+        val preDiscardTile =  if(discards.get(currentPlayer).getHand().size != 0) discards.get(currentPlayer).getLast() else Tile(Tile.Type.UNDEFINED, 0)
+        val claimChowHand = wall.getUnknownTiles().plusElement(preDiscardTile).filter { it.type.equals(preDiscardTile.type) && (it.number >= preDiscardTile.number - 2 && it.number <= preDiscardTile.number + 2) }
+            .distinctBy { it.toString() }.toMutableList()
+        val pungNum = if(wall.count(preDiscardTile) >= 2) 1 else 0
+        val chowNum = TileGroup.CHOW.getGroupListNum(claimChowHand)
+        val nextPlayer = if(num == -1) (currentPlayer + 1) % 4 else num
+        val punged = if(pungs.get(nextPlayer).size != 0) true else false
+        val kongNum = if(wall.count(preDiscardTile) >= 3 || wall.maxCount() == 4 || (punged && pungs.get(nextPlayer).contains(preDiscardTile))) 1 else 0
+
         if(num == -1){
             operationText.text = operationOrClaimTextMap.get(currentPlayer)
             currentPlayer = (currentPlayer + 1) % 4
-            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4)
+            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum)
         }
         else {
             currentPlayer = num
             operationText.text = operationTextMap.get(currentPlayer)
-            changeClaimButtonVisivility(View.GONE)
+            changeClaimButtonVisivility(View.GONE, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum)
         }
         (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
 
@@ -240,7 +270,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
     }
 
     fun forceDraw(){
-        if(!isKong && discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().getType() != Tile.Type.UNDEFINED) {
+        if(!isKong && discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().type != Tile.Type.UNDEFINED) {
             operationText.text = "あなたのツモ牌を選択 or 鳴きを選択してください"
             confirmButton.visibility = View.GONE
         }
@@ -254,23 +284,22 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
 
     fun execClaim(type: String, claimPlayer: Int){
         lateinit var claimTileList: MutableList<Tile>
-        val preDiscardTile = discards.get((currentPlayer + 3) % 4).getLast()
+        val preDiscardTile = if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) discards.get((currentPlayer + 3) % 4).getLast() else Tile(Tile.Type.UNDEFINED, 0)
         var concealedKong = false
 
         if(claimPlayer == 0){
             if(type.equals("pung")){
-                val claimHand = hand.getHand().plusElement(preDiscardTile).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
+                val claimHand = hand.getHand().plusElement(preDiscardTile).sortedWith(compareBy({ it.type }, { it.number })).toMutableList()
                 claimTileList = TileGroup.PUNG.getGroupList(claimHand).get(0)
             } else if(type.equals("chow")){
-                //ここにチーの牌を選択する処理を書く
-                val claimHand = hand.getHand().plusElement(preDiscardTile).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
+                val claimHand = hand.getHand().plusElement(preDiscardTile).sortedWith(compareBy({ it.type }, { it.number })).toMutableList()
                 val chowNum = TileGroup.CHOW.getGroupListNum(claimHand)
                 if(chowNum <= 1)
                     claimTileList = TileGroup.CHOW.getGroupList(claimHand).get(0)
                 else{
-                    val dialog = ClaimDialogFragment()
+                    val dialog = ChowDialogFragment()
                     dialog.setFragment(this)
-                    dialog.setClaimPlayer(claimPlayer)
+                    dialog.claimPlayer = claimPlayer
 
                     val allChowList = TileGroup.CHOW.getGroupList(claimHand).distinctBy { it.get(0).toString() }
                     for(claimTiles in allChowList)
@@ -280,16 +309,48 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                     return
                 }
             } else if(type.equals("kong")){
-                val claimHand = hand.getHandWithDraw().plusElement(preDiscardTile).sortedWith(compareBy({ it.getType() }, { it.getNumber() })).toMutableList()
-                claimTileList = TileGroup.KONG.getGroupList(claimHand).get(0)
-                if(TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) != 0)
-                    concealedKong = true
+                val claimHand = hand.getHandWithDraw().plusElement(preDiscardTile).sortedWith(compareBy({ it.type }, { it.number })).toMutableList()
+                val kongNum = TileGroup.KONG.getGroupList(claimHand).distinctBy { it.get(0).toString() }.count()
+                if(kongNum <= 1){
+                    claimTileList = TileGroup.KONG.getGroupList(claimHand).get(0)
+                    if(TileGroup.KONG.getGroupListNum(hand.getHandWithDraw()) != 0)
+                        concealedKong = true
+                } else if(hand.getDraw().type == Tile.Type.UNDEFINED){
+                    claimTileList = TileGroup.KONG.getGroupList(claimHand).find{ it.get(0).toString().equals(preDiscardTile.toString()) }!!
+                } else{
+                    val dialog = KongDialogFragment()
+                    dialog.setFragment(this)
+                    dialog.claimPlayer = claimPlayer
+
+                    val allKongList = TileGroup.KONG.getGroupList(claimHand).distinctBy { it.get(0).toString() }
+                    for(claimTiles in allKongList)
+                        dialog.addKong(createClaimView("kong", claimPlayer, claimTiles, false, false), claimTiles)
+
+                    dialog.show(fragmentManager!!, "ClaimDialogFragment")
+                    return
+                }
             }
         } else{
             if(type.equals("pung")){
                 claimTileList = mutableListOf(preDiscardTile, preDiscardTile, preDiscardTile)
             } else if(type.equals("chow")){
+                val claimHand = wall.getUnknownTiles().plusElement(preDiscardTile).filter { it.type.equals(preDiscardTile.type) && (it.number >= preDiscardTile.number - 2 && it.number <= preDiscardTile.number + 2) }
+                    .distinctBy { it.toString() }.toMutableList()
+                val chowNum = TileGroup.CHOW.getGroupListNum(claimHand)
+                if(chowNum <= 1)
+                    claimTileList = TileGroup.CHOW.getGroupList(claimHand).get(0)
+                else{
+                    val dialog = ChowDialogFragment()
+                    dialog.setFragment(this)
+                    dialog.claimPlayer = claimPlayer
 
+                    val allChowList = TileGroup.CHOW.getGroupList(claimHand).distinctBy { it.get(0).toString() }
+                    for(claimTiles in allChowList)
+                        dialog.addChow(createClaimView("chow", claimPlayer, claimTiles, false, false), claimTiles)
+
+                    dialog.show(fragmentManager!!, "ClaimDialogFragment")
+                    return
+                }
             } else if(type.equals("kong")){
                 claimTileList = mutableListOf(preDiscardTile, preDiscardTile, preDiscardTile, preDiscardTile)
             }
@@ -301,11 +362,12 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
         if(doAdd)
             claimArea.visibility = View.VISIBLE
 
-        val preDiscardTile = discards.get((currentPlayer + 3) % 4).getLast()
+        val preDiscardTile = if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) discards.get((currentPlayer + 3) % 4).getLast() else Tile(Tile.Type.UNDEFINED, 0)
         var layoutContainer = LinearLayout(ContextGetter.applicationContext())
         layoutContainer.orientation = LinearLayout.HORIZONTAL
 
         var discardUseTile = Tile(Tile.Type.UNDEFINED, 0)
+        var claimIndex = 0
         for (index in (0..(claimTileList.size - 1))) {
             val layout = LinearLayout(ContextGetter.applicationContext())
             val imageView = ImageView(ContextGetter.applicationContext())
@@ -314,7 +376,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
             var imageId: Int
 
             if(claimPlayer == 0){
-                if(discardUseTile.getType() == Tile.Type.UNDEFINED && claimTileList.get(index).equals(preDiscardTile))
+                if(discardUseTile.type == Tile.Type.UNDEFINED && claimTileList.get(index).equals(preDiscardTile))
                     handView = nullTile
                 else
                     handView = handNumToLayout.get(hand.getHand().indexOf(claimTileList.get(index)) + 1)!!
@@ -360,6 +422,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                     if((currentPlayer + 3) % 4 == (3 - index + claimPlayer) % 4) {
                         imageView.rotation = -90.0f
                         imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29))
+                        claimIndex = index
                     }
                 } else{
                     if(index == 0 || index == claimTileList.size - 1)
@@ -394,15 +457,17 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
             }
             claimLayout.get(claimPlayer)!!.addView(layoutContainer)
             claimTileList.remove(discardUseTile)
-            discards.get((currentPlayer + 3) % 4).popHand()
+            if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty())
+                discards.get((currentPlayer + 3) % 4).popHand()
             var player = (currentPlayer + 3) % 4
-            while(hand.getDraw().getType() == Tile.Type.UNDEFINED && player != claimPlayer){
+            while(hand.getDraw().type == Tile.Type.UNDEFINED && player != claimPlayer){
                 discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
                 player = (player + 1) % 4
             }
             if(claimPlayer == 0){
                 if (type.equals("pung")) {
                     hand.pung(claimTileList, discardUseTile)
+                    pungs.get(0).set(claimTileList.get(0), claimIndex)
                     changePlayer(claimPlayer)
                     forceDiscard()
                 }
@@ -418,7 +483,11 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
                     forceDraw()
                 }
             } else {
-                if (type.equals("pung") || type.equals("chow")) {
+                if (type.equals("pung")){
+                    pungs.get(player).set(claimTileList.get(0), claimIndex)
+                    changePlayer(player)
+                }
+                if (type.equals("chow")) {
                     changePlayer(player)
                 }
                 if (type.equals("kong")) {
@@ -433,6 +502,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
             }
             if(currentPlayer != 0)
                 changeClaimButtonVisivility(View.GONE)
+            confirmButton.visibility = View.INVISIBLE
             updateView()
         }
         return layoutContainer
@@ -451,25 +521,25 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Claim
         drawArea.background = null
     }
 
-    fun changeClaimButtonVisivility(param: Int, player: Int = -1){
+    fun changeClaimButtonVisivility(param: Int, player: Int = -1, pungNum: Int = -1, chowNum: Int = -1, kongNum: Int = -1){
         pungButton.visibility = View.GONE
         chowButton.visibility = View.GONE
         kongButton.visibility = View.GONE
 
-        rightPungButton.visibility = param
-        rightChowButton.visibility = param
-        rightKongButton.visibility = param
-        oppositePungButton.visibility = param
-        oppositeChowButton.visibility = param
-        oppositeKongButton.visibility = param
-        leftPungButton.visibility = param
-        leftChowButton.visibility = param
-        leftKongButton.visibility = param
+        rightPungButton.visibility = if(pungNum == 0) View.GONE else param
+        rightChowButton.visibility = if(chowNum == 0) View.GONE else param
+        rightKongButton.visibility = if(kongNum == 0) View.GONE else param
+        oppositePungButton.visibility = if(pungNum == 0) View.GONE else param
+        oppositeChowButton.visibility = if(chowNum == 0) View.GONE else param
+        oppositeKongButton.visibility = if(kongNum == 0) View.GONE else param
+        leftPungButton.visibility = if(pungNum == 0) View.GONE else param
+        leftChowButton.visibility = if(chowNum == 0) View.GONE else param
+        leftKongButton.visibility = if(kongNum == 0) View.GONE else param
 
-        if(param == View.VISIBLE)
-            confirmButton.visibility = View.GONE
-        else
-            confirmButton.visibility = View.VISIBLE
+        when(param){
+            View.VISIBLE -> confirmButton.visibility = View.INVISIBLE
+            View.GONE -> confirmButton.visibility = View.VISIBLE
+        }
 
         when(player){
             0 -> {

@@ -21,6 +21,10 @@ class Wall{
         return unknownTiles.count { it.equals(tile) }
     }
 
+    fun maxCount(): Int{
+        return unknownTiles.map { count(it) }.max()!!
+    }
+
     fun remove(removeTile: Tile){
         knownTiles.add(removeTile)
         unknownTiles.remove(removeTile)

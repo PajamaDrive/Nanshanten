@@ -88,7 +88,7 @@ class Yaku{
                             }
 
                             if(chow.size >= 3){
-                                if(chow.distinctBy { it.get(0).getType() }.groupingBy{ it.get(0).getNumber() }.eachCount().values.max() == 3)
+                                if(chow.distinctBy { it.get(0).type }.groupingBy{ it.get(0).number }.eachCount().values.max() == 3)
                                     yakus.add("三色同順")
                             }
 
@@ -114,7 +114,7 @@ class Yaku{
                                     yakus.add("緑一色")
                             }
 
-                            if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].getType() <= Tile.Type.BAMBOO) {
+                            if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].type <= Tile.Type.BAMBOO) {
                                 yakus.add("清一色")
                             }
                             else if(TileGroup.CHARACTER.getGroupListNum(hand.getHand()) + TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14 ||
@@ -148,8 +148,8 @@ class Yaku{
 
                             if(TileGroup.STRAIGHT.getGroupListNum(hand.getHand()) >= 1){
                                 yakus.add("一気通貫")
-                                if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].getType() <= Tile.Type.BAMBOO){
-                                    if(hand.getHand().count{it.getNumber() == 1} + hand.getHand().count{it.getNumber() == 9} >= 6)
+                                if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].type <= Tile.Type.BAMBOO){
+                                    if(hand.getHand().count{it.number == 1} + hand.getHand().count{it.number == 9} >= 6)
                                         yakus.add("九蓮宝燈")
                                 }
                             }

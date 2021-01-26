@@ -2,7 +2,7 @@ package com.example.nanshanten
 
 import kotlin.reflect.typeOf
 
-class Tile(private val type: Type, private val number: Int){
+class Tile(val type: Type, val number: Int){
 
     companion object{
         private val circleTextMap = mapOf(1 to "一筒", 2 to "二筒", 3 to "三筒", 4 to "四筒", 5 to "五筒", 6 to "六筒", 7 to "七筒",
@@ -100,13 +100,6 @@ class Tile(private val type: Type, private val number: Int){
         }
     }
 
-    fun getType(): Type{
-        return type
-    }
-
-    fun getNumber(): Int{
-        return number
-    }
 
     override fun toString(): String {
         return text
@@ -114,7 +107,7 @@ class Tile(private val type: Type, private val number: Int){
 
     override fun equals(other: Any?): Boolean {
         if(other is Tile){
-            if(other.getType() == type && other.getNumber() == number)
+            if(other.type == type && other.number == number)
                 return true
         }
         return false

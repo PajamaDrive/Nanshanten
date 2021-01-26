@@ -7,10 +7,10 @@ enum class TileGroup {
     CHOW{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(index in (0..(hand.size - 1))){
-                if(hand[index].getType() <= Tile.Type.BAMBOO) {
-                    if(hand[index].getNumber() <= hand[index].getType().getTypeSize() - 2) {
-                        if (hand.contains(Tile(hand[index].getType(), hand[index].getNumber() + 1)) &&
-                            hand.contains(Tile(hand[index].getType(), hand[index].getNumber() + 2)))
+                if(hand[index].type <= Tile.Type.BAMBOO) {
+                    if(hand[index].number <= hand[index].type.getTypeSize() - 2) {
+                        if (hand.contains(Tile(hand[index].type, hand[index].number + 1)) &&
+                            hand.contains(Tile(hand[index].type, hand[index].number + 2)))
                             return true
                     }
                 }
@@ -23,14 +23,14 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(index in (0..(hand.size - 1))){
-                if(hand[index].getType() <= Tile.Type.BAMBOO) {
-                    if(hand[index].getNumber() <= hand[index].getType().getTypeSize() - 2) {
-                        if (hand.contains(Tile(hand[index].getType(), hand[index].getNumber() + 1)) &&
-                            hand.contains(Tile(hand[index].getType(), hand[index].getNumber() + 2))) {
+                if(hand[index].type <= Tile.Type.BAMBOO) {
+                    if(hand[index].number <= hand[index].type.getTypeSize() - 2) {
+                        if (hand.contains(Tile(hand[index].type, hand[index].number + 1)) &&
+                            hand.contains(Tile(hand[index].type, hand[index].number + 2))) {
                             var group = mutableListOf<Tile>()
-                            group.add(Tile(hand[index].getType(), hand[index].getNumber()))
-                            group.add(Tile(hand[index].getType(), hand[index].getNumber() + 1))
-                            group.add(Tile(hand[index].getType(), hand[index].getNumber() + 2))
+                            group.add(Tile(hand[index].type, hand[index].number))
+                            group.add(Tile(hand[index].type, hand[index].number + 1))
+                            group.add(Tile(hand[index].type, hand[index].number + 2))
                             groupList.add(group)
                         }
                     }
@@ -56,9 +56,9 @@ enum class TileGroup {
             for(index in (2..(hand.size - 1))){
                 if(hand[index - 1].equals(hand[index]) and hand[index - 2].equals(hand[index])){
                     var group = mutableListOf<Tile>()
-                    group.add(Tile(hand[index - 2].getType(), hand[index - 2].getNumber()))
-                    group.add(Tile(hand[index - 1].getType(), hand[index - 1].getNumber()))
-                    group.add(Tile(hand[index].getType(), hand[index].getNumber()))
+                    group.add(Tile(hand[index - 2].type, hand[index - 2].number))
+                    group.add(Tile(hand[index - 1].type, hand[index - 1].number))
+                    group.add(Tile(hand[index].type, hand[index].number))
                     groupList.add(group)
                 }
             }
@@ -80,10 +80,10 @@ enum class TileGroup {
             for(index in (3..(hand.size - 1))){
                 if(hand[index - 1].equals(hand[index]) and hand[index - 2].equals(hand[index]) and hand[index - 3].equals(hand[index])){
                     var group = mutableListOf<Tile>()
-                    group.add(Tile(hand[index - 3].getType(), hand[index - 3].getNumber()))
-                    group.add(Tile(hand[index - 2].getType(), hand[index - 2].getNumber()))
-                    group.add(Tile(hand[index - 1].getType(), hand[index - 1].getNumber()))
-                    group.add(Tile(hand[index].getType(), hand[index].getNumber()))
+                    group.add(Tile(hand[index - 3].type, hand[index - 3].number))
+                    group.add(Tile(hand[index - 2].type, hand[index - 2].number))
+                    group.add(Tile(hand[index - 1].type, hand[index - 1].number))
+                    group.add(Tile(hand[index].type, hand[index].number))
                     groupList.add(group)
                 }
             }
@@ -105,8 +105,8 @@ enum class TileGroup {
             for(index in (1..(hand.size - 1))){
                 if(hand[index - 1].equals(hand[index])){
                     var group = mutableListOf<Tile>()
-                    group.add(Tile(hand[index - 1].getType(), hand[index - 1].getNumber()))
-                    group.add(Tile(hand[index].getType(), hand[index].getNumber()))
+                    group.add(Tile(hand[index - 1].type, hand[index - 1].number))
+                    group.add(Tile(hand[index].type, hand[index].number))
                     groupList.add(group)
                 }
             }
@@ -117,7 +117,7 @@ enum class TileGroup {
     HONOR{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() > Tile.Type.BAMBOO)
+                if(tile.type > Tile.Type.BAMBOO)
                     return true
             }
             return false
@@ -126,7 +126,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() > Tile.Type.BAMBOO)
+                if(tile.type > Tile.Type.BAMBOO)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -136,7 +136,7 @@ enum class TileGroup {
     SUIT{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() <= Tile.Type.BAMBOO)
+                if(tile.type <= Tile.Type.BAMBOO)
                     return true
             }
             return false
@@ -145,7 +145,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() <= Tile.Type.BAMBOO)
+                if(tile.type <= Tile.Type.BAMBOO)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -155,7 +155,7 @@ enum class TileGroup {
     NUMBER{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() <= Tile.Type.BAMBOO)
+                if(tile.type <= Tile.Type.BAMBOO)
                     return true
             }
             return false
@@ -165,8 +165,8 @@ enum class TileGroup {
             groupList.clear()
             for(index in (1..9)) {
                 var group = mutableListOf<Tile>()
-                if (hand.find { it.getType() <= Tile.Type.BAMBOO && it.getNumber() == index } != null)
-                    group.addAll(hand.filter { it.getType() <= Tile.Type.BAMBOO && it.getNumber() == index }.toMutableList())
+                if (hand.find { it.type <= Tile.Type.BAMBOO && it.number == index } != null)
+                    group.addAll(hand.filter { it.type <= Tile.Type.BAMBOO && it.number == index }.toMutableList())
                 groupList.add(group)
             }
             return groupList
@@ -182,8 +182,8 @@ enum class TileGroup {
             groupList.clear()
             for(type in Tile.Type.values()) {
                 var group = mutableListOf<Tile>()
-                if (hand.find { it.getType() == type} != null)
-                    group.addAll(hand.filter { it.getType() == type }.toMutableList())
+                if (hand.find { it.type == type} != null)
+                    group.addAll(hand.filter { it.type == type }.toMutableList())
                 groupList.add(group)
             }
             return groupList
@@ -193,7 +193,7 @@ enum class TileGroup {
     TERMINAL_AND_HONOR{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() > Tile.Type.BAMBOO || (tile.getNumber() == 1 || tile.getNumber() == 9))
+                if(tile.type > Tile.Type.BAMBOO || (tile.number == 1 || tile.number == 9))
                     return true
             }
             return false
@@ -202,7 +202,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() > Tile.Type.BAMBOO || (tile.getNumber() == 1 || tile.getNumber() == 9))
+                if(tile.type > Tile.Type.BAMBOO || (tile.number == 1 || tile.number == 9))
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -212,7 +212,7 @@ enum class TileGroup {
     CHARACTER{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() == Tile.Type.CHARACTER)
+                if(tile.type == Tile.Type.CHARACTER)
                     return true
             }
             return false
@@ -221,7 +221,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() == Tile.Type.CHARACTER)
+                if(tile.type == Tile.Type.CHARACTER)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -231,7 +231,7 @@ enum class TileGroup {
     CIRCLE{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() == Tile.Type.CIRCLE)
+                if(tile.type == Tile.Type.CIRCLE)
                     return true
             }
             return false
@@ -240,7 +240,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() == Tile.Type.CIRCLE)
+                if(tile.type == Tile.Type.CIRCLE)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -250,7 +250,7 @@ enum class TileGroup {
     BAMBOO{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() == Tile.Type.BAMBOO)
+                if(tile.type == Tile.Type.BAMBOO)
                     return true
             }
             return false
@@ -259,7 +259,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() == Tile.Type.BAMBOO)
+                if(tile.type == Tile.Type.BAMBOO)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -269,7 +269,7 @@ enum class TileGroup {
     WIND{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() == Tile.Type.WIND)
+                if(tile.type == Tile.Type.WIND)
                     return true
             }
             return false
@@ -278,7 +278,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() == Tile.Type.WIND)
+                if(tile.type == Tile.Type.WIND)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -288,7 +288,7 @@ enum class TileGroup {
     DRAGON{
         override fun existGroup(hand: MutableList<Tile>): Boolean {
             for(tile in hand){
-                if(tile.getType() == Tile.Type.DRAGON)
+                if(tile.type == Tile.Type.DRAGON)
                     return true
             }
             return false
@@ -297,7 +297,7 @@ enum class TileGroup {
         override fun getGroupList(hand: MutableList<Tile>): MutableList<MutableList<Tile>> {
             groupList.clear()
             for(tile in hand){
-                if(tile.getType() == Tile.Type.DRAGON)
+                if(tile.type == Tile.Type.DRAGON)
                     groupList.add(mutableListOf(tile))
             }
             return groupList
@@ -307,7 +307,7 @@ enum class TileGroup {
     STRAIGHT{
         fun containAllNumber(type: Tile.Type, hand: MutableList<Tile>): Boolean{
             for(index in (1..type.getTypeSize())){
-                if(hand.find{ it.getType() == type && it.getNumber() == index } == null)
+                if(hand.find{ it.type == type && it.number == index } == null)
                     return false
             }
             return true

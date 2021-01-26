@@ -35,7 +35,7 @@ class Hand{
     }
 
     fun sortHand(){
-        tiles.sortWith(compareBy({it.getType()}, {it.getNumber()}))
+        tiles.sortWith(compareBy({it.type}, {it.number}))
     }
 
     fun getHand(): MutableList<Tile>{
@@ -43,7 +43,7 @@ class Hand{
     }
 
     fun getHandWithDraw(): MutableList<Tile>{
-        return tiles.toMutableList().plusElement(drawTile).sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+        return tiles.toMutableList().plusElement(drawTile).sortedWith(compareBy({it.type}, {it.number})).toMutableList()
     }
 
     fun setDraw(tile: Tile){
@@ -68,7 +68,7 @@ class Hand{
     }
 
     fun getSortAllHand(): MutableList<Tile>{
-        return tiles.toMutableList().plus(chows).plus(pungs).plus(kongs).sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+        return tiles.toMutableList().plus(chows).plus(pungs).plus(kongs).sortedWith(compareBy({it.type}, {it.number})).toMutableList()
     }
 
     fun chow(removeTiles: MutableList<Tile>, discardTile: Tile){
@@ -76,7 +76,7 @@ class Hand{
             chows.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
-        if(discardTile.getType() != Tile.Type.UNDEFINED)
+        if(discardTile.type != Tile.Type.UNDEFINED)
             chows.add(discardTile)
     }
 
@@ -85,12 +85,12 @@ class Hand{
             pungs.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
-        if(discardTile.getType() != Tile.Type.UNDEFINED)
+        if(discardTile.type != Tile.Type.UNDEFINED)
             pungs.add(discardTile)
     }
 
     fun kong(removeTiles: MutableList<Tile>, discardTile: Tile){
-        if(drawTile.getType() != Tile.Type.UNDEFINED){
+        if(drawTile.type != Tile.Type.UNDEFINED){
             kongs.add(removeTiles.get(0))
             removeTiles.removeAt(0)
             drawTile = Tile(Tile.Type.UNDEFINED, 0)
@@ -99,7 +99,7 @@ class Hand{
             kongs.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
-        if(discardTile.getType() != Tile.Type.UNDEFINED)
+        if(discardTile.type != Tile.Type.UNDEFINED)
             kongs.add(discardTile)
     }
 
@@ -108,7 +108,7 @@ class Hand{
         for(tile in elements){
             removedList.remove(tile)
         }
-        return removedList.sortedWith(compareBy({it.getType()}, {it.getNumber()})).toMutableList()
+        return removedList.sortedWith(compareBy({it.type}, {it.number})).toMutableList()
     }
 
     fun canRemove(elements: MutableList<Tile>): Boolean{
