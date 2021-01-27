@@ -4,14 +4,18 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
 class KongDialogFragment : ClaimDialogFragment() {
     lateinit var selectedKong: MutableList<Tile>
+    private val scrollLayout = HorizontalScrollView(ContextGetter.applicationContext())
     var kongLayout = LinearLayout(ContextGetter.applicationContext())
     var kongList: MutableList<MutableList<Tile>> = mutableListOf()
+    private var enable = false
 
     val touchListener = View.OnClickListener { v: View ->
         kongList.forEachIndexed { index, list ->
@@ -28,15 +32,17 @@ class KongDialogFragment : ClaimDialogFragment() {
         kongLayout.gravity = Gravity.CENTER
     }
 
-    interface DialogListener: ClaimDialogFragment.DialogListener {
-        override fun onDialogPositiveClick(dialog: ClaimDialogFragment, claimPlayer: Int)
-        override fun onDialogNegativeClick(dialog: ClaimDialogFragment, claimPlayer: Int)
-    }
-
     fun addKong(layout: LinearLayout, kongList: MutableList<Tile>){
         layout.setOnClickListener(touchListener)
         kongLayout.addView(layout)
         this.kongList.add(kongList)
+    }
+
+    fun enableScroll(enable: Boolean){
+        if(enable){
+            scrollLayout.addView(kongLayout)
+        }
+        this.enable = enable
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -46,7 +52,7 @@ class KongDialogFragment : ClaimDialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setTitle("カン")
                 .setMessage("鳴く牌を選択してください")
-                .setView(kongLayout)
+                .setView(if(enable) scrollLayout else kongLayout)
                 .setPositiveButton(R.string.ok){ dialog, id ->
                     listener.onDialogPositiveClick(this, claimPlayer)
                 }

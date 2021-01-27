@@ -103,6 +103,16 @@ class Hand{
             kongs.add(discardTile)
     }
 
+    fun extendKong(tile: Tile){
+        (0..2).forEach {
+            pungs.remove(tile)
+            kongs.add(tile)
+        }
+        kongs.add(tile)
+        addDrawToHand()
+        tiles.remove(tile)
+    }
+
     fun getRemoveList(elements: MutableList<Tile>): MutableList<Tile>{
         val removedList = tiles.toMutableList()
         for(tile in elements){
