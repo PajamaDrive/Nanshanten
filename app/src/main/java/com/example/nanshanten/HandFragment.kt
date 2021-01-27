@@ -2,6 +2,7 @@ package com.example.nanshanten
 
 import android.graphics.Canvas
 import android.graphics.Point
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -78,6 +79,18 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         }
     }
 
+    val doraClickListener = View.OnClickListener { v: View ->
+        val dialog = DoraDialogFragment()
+        dialog.setFragment(this)
+
+        val allDoraList = wall.getUnknownTiles().distinctBy { it.toString() }
+        for(tile in allDoraList)
+            dialog.addDora(createTileView(tile), tile)
+
+        dialog.clickView = v as LinearLayout
+        dialog.show(fragmentManager!!, "ClaimDialogFragment")
+    }
+
     lateinit var handIdToNum: Map<Int, Int>
     lateinit var handNumToLayout: MutableMap<Int, LinearLayout>
     lateinit var tileStringToLayout: Map<String, LinearLayout>
@@ -122,6 +135,24 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             }
             createClaimView("kong", claimPlayer, (dialog as KongDialogFragment).selectedKong, concealedKong, true)
         }
+        if(Regex("Dora").containsMatchIn(Throwable().stackTrace[1].className)){
+            val doraView = (dialog as DoraDialogFragment).clickView
+            val preDoraText = (doraView.getChildAt(1) as TextView).text.toString()
+            if(!preDoraText.equals("未選択")){
+                val preDoraTile = Tile(Tile.getTileTypeByText(preDoraText), Tile.getTileNumberByText(preDoraText))
+                wall.back(preDoraTile)
+                (tileStringToLayout.get(Tile.getTileIdTextByText(preDoraText))!!.getChildAt(0) as TextView).text = "あと" + wall.count(preDoraTile) + "枚"
+                enableTile(tileStringToLayout.get(Tile.getTileIdTextByText(preDoraTile.toString()))!!)
+            }
+            dialog.clickView.removeAllViews()
+            dialog.clickView.addView(createTileImage(dialog.selectedDora))
+            dialog.clickView.addView(createTileText(dialog.selectedDora))
+            val doraTile = dialog.selectedDora
+            wall.remove(doraTile)
+            (tileStringToLayout.get(Tile.getTileIdTextByText(doraTile.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(doraTile) + "枚"
+            if(wall.count(doraTile) == 0)
+                disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(doraTile.toString()))!!)
+        }
     }
 
     override fun onDialogNegativeClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
@@ -146,6 +177,9 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             }
             operationText.text = operationTextMap.get(currentPlayer)
             changeClaimButtonVisivility(View.GONE)
+            for(index in (0..doraArea.childCount - 1)){
+                doraArea.getChildAt(index).setOnClickListener(null)
+            }
             //yakuText.text = Yaku.getYakuList(hand).toString()
         }
         updateView()
@@ -250,22 +284,26 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             .distinctBy { it.toString() }.toMutableList()
         val pungNum = if(wall.count(preDiscardTile) >= 2) 1 else 0
         val chowNum = TileGroup.CHOW.getGroupListNum(claimChowHand)
+        val kongNum = if(wall.count(preDiscardTile) >= 3) 1 else 0
         val nextPlayer = if(num == -1) (currentPlayer + 1) % 4 else num
         val punged = if(pungs.get(nextPlayer).size != 0) true else false
-        val kongNum = if(wall.count(preDiscardTile) >= 3 || wall.maxCount() == 4 || (punged && pungs.get(nextPlayer).count { wall.count(it.key) == 1 } >= 1)) 1 else 0
+        val nextKongNum = if(wall.count(preDiscardTile) >= 3 || wall.maxCount() == 4 || (punged && pungs.get(nextPlayer).count { wall.count(it.key) == 1 } >= 1)) 1 else 0
 
         if(num == -1){
             operationText.text = operationOrClaimTextMap.get(currentPlayer)
             currentPlayer = (currentPlayer + 1) % 4
-            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum)
+            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
         }
         else {
             currentPlayer = num
             operationText.text = operationTextMap.get(currentPlayer)
-            changeClaimButtonVisivility(View.GONE, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum)
+            changeClaimButtonVisivility(View.GONE, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
         }
         (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
 
+        for(index in (0..doraArea.childCount - 1)){
+            doraArea.getChildAt(index).setOnClickListener(doraClickListener)
+        }
         canClaim()
     }
 
@@ -406,6 +444,40 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         createClaimView(type, claimPlayer, claimTileList, concealedKong, true)
     }
 
+    fun createTileImage(tile: Tile, width: Int = 36, height: Int = 48, left: Int = 1, top: Int = 5, right: Int = 1, bottom: Int = 0): ImageView{
+        val imageView = ImageView(ContextGetter.applicationContext())
+        val imageId = resources.getIdentifier(if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "tile_back" else Tile.getTileIdTextByText(tile.toString()), "drawable", "com.example.nanshanten")
+        imageView.setImageResource(imageId)
+        val imagaViewMarginParams = LinearLayout.LayoutParams(dpToPx(width), dpToPx(height)) as ViewGroup.MarginLayoutParams
+        imagaViewMarginParams.setMargins(dpToPx(left), dpToPx(top), dpToPx(right), dpToPx(bottom))
+        imageView.layoutParams = imagaViewMarginParams
+
+        return imageView
+    }
+
+    fun createTileText(tile: Tile, textSize: Float = 12.0f): TextView{
+        val textView = TextView(ContextGetter.applicationContext())
+        textView.text = if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "未選択" else tile.toString()
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        textView.gravity = Gravity.CENTER
+
+        return textView
+    }
+
+    fun createTileView(tile: Tile, width: Int = 36, height: Int = 48, textSize: Float = 12.0f,
+        iLeft: Int = 1, iTop: Int = 5, iRight: Int = 1, iBottom: Int = 0, lLeft: Int = 5, lTop: Int = 0, lRight: Int = 0, lBottom: Int = 0): LinearLayout{
+        val layout = LinearLayout(ContextGetter.applicationContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+        layout.addView(createTileImage(tile, width, height, iLeft, iTop, iRight, iBottom))
+        layout.addView(createTileText(tile, textSize))
+
+        val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+        layoutMarginParams.setMargins(dpToPx(lLeft), dpToPx(lTop), dpToPx(lRight), dpToPx(lBottom))
+        layout.layoutParams = layoutMarginParams
+        return layout
+    }
+
     fun createClaimView(type: String, claimPlayer: Int, claimTileList: MutableList<Tile>, concealedKong: Boolean, doAdd: Boolean): LinearLayout{
         if(doAdd) {
             claimArea.visibility = View.VISIBLE
@@ -477,8 +549,13 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                     if(currentPlayer != 0)
                         changeClaimButtonVisivility(View.GONE)
                     confirmButton.visibility = View.INVISIBLE
-                    updateView()
 
+                    if(doraArea.childCount <= 5){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
+
+                    updateView()
 
                     return claimView
                 }
@@ -599,6 +676,10 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                     hand.kong(claimTileList, discardUseTile)
                     changePlayer(claimPlayer)
                     forceDraw()
+                    if(doraArea.childCount <= 5){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
                 }
             } else {
                 if (type.equals("pung")){
@@ -610,6 +691,10 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                 }
                 if (type.equals("kong")) {
                     changePlayer((player + 1) % 4)
+                    if(doraArea.childCount <= 5){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
                 }
                 wall.removeAll(claimTileList)
                 claimTileList.forEach {
@@ -639,7 +724,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         drawArea.background = null
     }
 
-    fun changeClaimButtonVisivility(param: Int, player: Int = -1, pungNum: Int = -1, chowNum: Int = -1, kongNum: Int = -1){
+    fun changeClaimButtonVisivility(param: Int, player: Int = -1, pungNum: Int = -1, chowNum: Int = -1, kongNum: Int = -1, nextKongNum: Int = -1){
         pungButton.visibility = View.GONE
         chowButton.visibility = View.GONE
         kongButton.visibility = View.GONE
@@ -663,18 +748,21 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             0 -> {
                 oppositeChowButton.visibility = View.GONE
                 leftChowButton.visibility = View.GONE
+                if(param == View.VISIBLE && nextKongNum == 1) rightKongButton.visibility = View.VISIBLE
             }
             1 ->{
                 rightPungButton.visibility = View.GONE
                 rightChowButton.visibility = View.GONE
                 rightKongButton.visibility = View.GONE
                 leftChowButton.visibility = View.GONE
+                if(param == View.VISIBLE && nextKongNum == 1) oppositeKongButton.visibility = View.VISIBLE
             }
             2 ->{
                 oppositePungButton.visibility = View.GONE
                 oppositeChowButton.visibility = View.GONE
                 oppositeKongButton.visibility = View.GONE
                 rightChowButton.visibility = View.GONE
+                if(param == View.VISIBLE && nextKongNum == 1) leftKongButton.visibility = View.VISIBLE
             }
             3 ->{
                 leftPungButton.visibility = View.GONE
@@ -683,7 +771,9 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                 oppositeChowButton.visibility = View.GONE
                 rightChowButton.visibility = View.GONE
             }
-            else -> { }
+            else -> {
+
+            }
         }
     }
 
@@ -743,6 +833,11 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
     fun disableTile(layout: LinearLayout){
         (layout.getChildAt(0) as TextView).setTextColor(ContextCompat.getColor(ContextGetter.applicationContext(), R.color.colorAccent))
         (layout.getChildAt(1) as ImageView).alpha = 0.1f
+    }
+
+    fun enableTile(layout: LinearLayout){
+        (layout.getChildAt(0) as TextView).setTextColor(ContextCompat.getColor(ContextGetter.applicationContext(), R.color.textColor))
+        (layout.getChildAt(1) as ImageView).alpha = 1.0f
     }
 
     fun enableHandListener(flag: Boolean){
@@ -908,6 +1003,8 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         leftChowButton.setOnClickListener(opponentClaimButtonListener("chow", 3))
         leftKongButton.setOnClickListener(opponentClaimButtonListener("kong", 3))
 
+        dora1.setOnClickListener(doraClickListener)
+
         handIdToNum = mapOf(hand1.id to 1, hand2.id to 2, hand3.id to 3, hand4.id to 4, hand5.id to 5, hand6.id to 6, hand7.id to 7,
             hand8.id to 8, hand9.id to 9, hand10.id to 10, hand11.id to 11, hand12.id to 12, hand13.id to 13, handDraw.id to 14,
         discardRightPlayer.id to 15, discardOppositePlayer.id to 16, discardLeftPlayer.id to 17)
@@ -948,6 +1045,9 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         changeClaimButtonVisivility(View.GONE)
         forceDraw()
         confirmButton.visibility = View.INVISIBLE
+        for(index in (0..doraArea.childCount - 1)){
+            doraArea.getChildAt(index).setOnClickListener(doraClickListener)
+        }
 
         wall.removeAll(hand.getHand())
         hand.getHand().forEach {

@@ -39,6 +39,14 @@ class Wall{
         }
     }
 
+    fun back(tile: Tile){
+        knownTiles.remove(tile)
+        unknownTiles.add(tile)
+        unknownTiles.sortWith(compareBy({it.type}, {it.number}))
+        absoluteTiles.add(tile)
+        absoluteTiles.sortWith(compareBy({it.type}, {it.number}))
+    }
+
     fun getWall(): MutableList<Tile>{
         return absoluteTiles
     }
