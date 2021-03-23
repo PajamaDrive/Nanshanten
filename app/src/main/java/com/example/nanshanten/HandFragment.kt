@@ -1,8 +1,5 @@
 package com.example.nanshanten
 
-import android.graphics.Canvas
-import android.graphics.Point
-import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +7,6 @@ import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -26,8 +22,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                 if(touchHand != nullTile)
                     changeSelectedHand(touchHand, -20)
                 touchHand = v
-            }
-            else{
+            } else{
                 changeSelectedHand(v, -20)
                 discardTile(v.id)
                 changePlayer()
@@ -108,6 +103,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
     val operationOrClaimTextMap = mapOf(0 to "下家の捨て牌を選択 or 鳴きを選択してください", 1 to "対面の捨て牌を選択 or 鳴きを選択してください", 2 to "上家の捨て牌を選択 or 鳴きを選択してください", 3 to "あなたのツモ牌を選択 or 鳴きを選択してください")
     lateinit var touchHand: LinearLayout
     var isKong = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -152,61 +148,45 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             (tileStringToLayout.get(Tile.getTileIdTextByText(doraTile.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(doraTile) + "枚"
             if(wall.count(doraTile) == 0)
                 disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(doraTile.toString()))!!)
+            changePlayer((currentPlayer + 3) % 4)
+            changePlayer()
         }
     }
 
     override fun onDialogNegativeClick(dialog: ClaimDialogFragment, claimPlayer: Int) {
     }
 
-    fun changeHand(view: View, id: Int) {
-        val tile = Tile(Tile.getTileType(id), Tile.getTileNumber(id))
-        (view as LinearLayout).background = null
-        if (wall.count(tile) != 0) {
-            val tileImageId = getDragImageId(id)
-            val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
-            (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
-            (view.getChildAt(1) as TextView).text = tileText
-            if(handIdToNum.get(view.id)!! <= hand.getHand().size) {
-                hand.changeTile(handIdToNum.get(view.id)!! - 1, tile)
-                Log.d("debug", "change at hand" + handIdToNum.get(view.id)!!.toString() + ", " + hand.getTile(handIdToNum.get(view.id)!! - 1).toString())
-            }
-            else if(handIdToNum.get(view.id)!! == 14) {
-
-                hand.setDraw(tile)
-                Log.d("debug", "change at draw, " + hand.getDraw().toString())
-            }
-            operationText.text = operationTextMap.get(currentPlayer)
-            changeClaimButtonVisivility(View.GONE)
-            for(index in (0..doraArea.childCount - 1)){
-                doraArea.getChildAt(index).setOnClickListener(null)
-            }
-            //yakuText.text = Yaku.getYakuList(hand).toString()
+    fun forceDraw(){
+        if(!isKong && discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().type != Tile.Type.UNDEFINED) {
+            operationText.text = "あなたのツモ牌を選択 or 鳴きを選択してください"
+            confirmButton.visibility = View.GONE
+        } else {
+            operationText.text = "あなたのツモ牌を選択"
+            confirmButton.visibility = View.INVISIBLE
         }
-        updateView()
+        enableHandListener(false)
+        enableTileListener(true)
     }
 
+    fun forceDiscard(){
+        if(Regex("kong").containsMatchIn(canClaim())){
+            operationText.text = "手牌から1つ捨てる or カンしてください"
+            confirmButton.visibility = View.GONE
+        } else{
+            operationText.text = "手牌から1つ捨ててください"
+            confirmButton.visibility = View.INVISIBLE
+        }
+        enableHandListener(true)
+        enableTileListener(false)
+        drawArea.background = null
+    }
 
     fun discardTile(id: Int){
-        val layout = LinearLayout(ContextGetter.applicationContext())
-        val imageView = ImageView(ContextGetter.applicationContext())
-        val textView = TextView(ContextGetter.applicationContext())
         val tileView = activity!!.findViewById<LinearLayout>(id)
-        val imageId = resources.getIdentifier(Tile.getTileIdTextByText((tileView.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
-        val tileText = (tileView.getChildAt(1) as TextView).text.toString()
+        val text = (tileView.getChildAt(1) as TextView).text.toString()
+        val tile = Tile(Tile.getTileTypeByText(text), Tile.getTileNumberByText(text))
+        val layout = createTileView(tile, 20, 27, 8.0f, 0, 0, 0, 0, 1, 0,1, 0)
 
-        layout.orientation = LinearLayout.VERTICAL
-        imageView.setImageResource(imageId)
-        imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(20),dpToPx(27))
-        textView.text = tileText
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
-        textView.gravity = Gravity.CENTER
-
-        layout.addView(imageView)
-        layout.addView(textView)
-
-        val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-        layoutMarginParams.setMargins(dpToPx(1), dpToPx(0), dpToPx(1), dpToPx(0))
-        layout.layoutParams = layoutMarginParams
         discardView.get(currentPlayer)!!.addView(layout)
 
         if(currentPlayer == 0) {
@@ -216,13 +196,11 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                 discards.get(0).pushHand(hand.getTile(handIdToNum.get(id)!! - 1))
             }
             hand.discardTile(handIdToNum.get(id)!! - 1)
-        }
-        else{
-            val tile = Tile(Tile.getTileTypeByText(tileText), Tile.getTileNumberByText(tileText))
+        } else{
             wall.remove(tile)
-            (tileStringToLayout.get(Tile.getTileIdTextByText(tileText))!!.getChildAt(0) as TextView).text = "あと" + wall.count(tile) + "枚"
+            (tileStringToLayout.get(Tile.getTileIdTextByText(text))!!.getChildAt(0) as TextView).text = "あと" + wall.count(tile) + "枚"
             if(wall.count(tile) == 0)
-                disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(tileText))!!)
+                disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(text))!!)
             discards.get(currentPlayer).pushHand(tile)
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(0) as ImageView).setImageResource(R.drawable.null_tile)
             (handNumToLayout.get(14 + currentPlayer)!!.getChildAt(1) as TextView).text = ""
@@ -274,57 +252,6 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             }
         }
         return claimType
-    }
-
-    fun changePlayer(num: Int = -1){
-        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).background = null
-
-        val preDiscardTile =  if(discards.get(currentPlayer).getHand().size != 0) discards.get(currentPlayer).getLast() else Tile(Tile.Type.UNDEFINED, 0)
-        val claimChowHand = wall.getUnknownTiles().plusElement(preDiscardTile).filter { it.type.equals(preDiscardTile.type) && (it.number >= preDiscardTile.number - 2 && it.number <= preDiscardTile.number + 2) }
-            .distinctBy { it.toString() }.toMutableList()
-        val pungNum = if(wall.count(preDiscardTile) >= 2) 1 else 0
-        val chowNum = TileGroup.CHOW.getGroupListNum(claimChowHand)
-        val kongNum = if(wall.count(preDiscardTile) >= 3) 1 else 0
-        val nextPlayer = if(num == -1) (currentPlayer + 1) % 4 else num
-        val punged = if(pungs.get(nextPlayer).size != 0) true else false
-        val nextKongNum = if(wall.count(preDiscardTile) >= 3 || wall.maxCount() == 4 || (punged && pungs.get(nextPlayer).count { wall.count(it.key) == 1 } >= 1)) 1 else 0
-
-        if(num == -1){
-            operationText.text = operationOrClaimTextMap.get(currentPlayer)
-            currentPlayer = (currentPlayer + 1) % 4
-            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
-        }
-        else {
-            currentPlayer = num
-            operationText.text = operationTextMap.get(currentPlayer)
-            changeClaimButtonVisivility(View.GONE, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
-        }
-        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
-
-        for(index in (0..doraArea.childCount - 1)){
-            doraArea.getChildAt(index).setOnClickListener(doraClickListener)
-        }
-        canClaim()
-    }
-
-    fun changeSelectedHand(view: View, dp:Int){
-        val layout = view as LinearLayout
-        val layoutMarginParams = (layout.layoutParams as ViewGroup.MarginLayoutParams)
-        layoutMarginParams.setMargins(layoutMarginParams.leftMargin, layoutMarginParams.topMargin, layoutMarginParams.rightMargin, layoutMarginParams.bottomMargin + dpToPx(dp))
-        layout.layoutParams = layoutMarginParams
-    }
-
-    fun forceDraw(){
-        if(!isKong && discards.get((currentPlayer + 3) % 4).getHand().size != 0 && discards.get((currentPlayer + 3) % 4).getLast().type != Tile.Type.UNDEFINED) {
-            operationText.text = "あなたのツモ牌を選択 or 鳴きを選択してください"
-            confirmButton.visibility = View.GONE
-        }
-        else {
-            operationText.text = "あなたのツモ牌を選択"
-            confirmButton.visibility = View.INVISIBLE
-        }
-        enableHandListener(false)
-        enableTileListener(true)
     }
 
     fun execClaim(type: String, claimPlayer: Int){
@@ -444,284 +371,35 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         createClaimView(type, claimPlayer, claimTileList, concealedKong, true)
     }
 
-    fun createTileImage(tile: Tile, width: Int = 36, height: Int = 48, left: Int = 1, top: Int = 5, right: Int = 1, bottom: Int = 0): ImageView{
-        val imageView = ImageView(ContextGetter.applicationContext())
-        val imageId = resources.getIdentifier(if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "tile_back" else Tile.getTileIdTextByText(tile.toString()), "drawable", "com.example.nanshanten")
-        imageView.setImageResource(imageId)
-        val imagaViewMarginParams = LinearLayout.LayoutParams(dpToPx(width), dpToPx(height)) as ViewGroup.MarginLayoutParams
-        imagaViewMarginParams.setMargins(dpToPx(left), dpToPx(top), dpToPx(right), dpToPx(bottom))
-        imageView.layoutParams = imagaViewMarginParams
+    fun changePlayer(num: Int = -1){
+        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).background = null
 
-        return imageView
-    }
+        val preDiscardTile =  if(discards.get(currentPlayer).getHand().size != 0) discards.get(currentPlayer).getLast() else Tile(Tile.Type.UNDEFINED, 0)
+        val claimChowHand = wall.getUnknownTiles().plusElement(preDiscardTile).filter { it.type.equals(preDiscardTile.type) && (it.number >= preDiscardTile.number - 2 && it.number <= preDiscardTile.number + 2) }
+            .distinctBy { it.toString() }.toMutableList()
+        val pungNum = if(wall.count(preDiscardTile) >= 2) 1 else 0
+        val chowNum = TileGroup.CHOW.getGroupListNum(claimChowHand)
+        val kongNum = if(wall.count(preDiscardTile) >= 3) 1 else 0
+        val nextPlayer = if(num == -1) (currentPlayer + 1) % 4 else num
+        val punged = if(pungs.get(nextPlayer).size != 0) true else false
+        val nextKongNum = if(wall.count(preDiscardTile) >= 3 || wall.maxCount() == 4 || (punged && pungs.get(nextPlayer).count { wall.count(it.key) == 1 } >= 1)) 1 else 0
 
-    fun createTileText(tile: Tile, textSize: Float = 12.0f): TextView{
-        val textView = TextView(ContextGetter.applicationContext())
-        textView.text = if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "未選択" else tile.toString()
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
-        textView.gravity = Gravity.CENTER
-
-        return textView
-    }
-
-    fun createTileView(tile: Tile, width: Int = 36, height: Int = 48, textSize: Float = 12.0f,
-        iLeft: Int = 1, iTop: Int = 5, iRight: Int = 1, iBottom: Int = 0, lLeft: Int = 5, lTop: Int = 0, lRight: Int = 0, lBottom: Int = 0): LinearLayout{
-        val layout = LinearLayout(ContextGetter.applicationContext())
-        layout.orientation = LinearLayout.VERTICAL
-
-        layout.addView(createTileImage(tile, width, height, iLeft, iTop, iRight, iBottom))
-        layout.addView(createTileText(tile, textSize))
-
-        val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-        layoutMarginParams.setMargins(dpToPx(lLeft), dpToPx(lTop), dpToPx(lRight), dpToPx(lBottom))
-        layout.layoutParams = layoutMarginParams
-        return layout
-    }
-
-    fun createClaimView(type: String, claimPlayer: Int, claimTileList: MutableList<Tile>, concealedKong: Boolean, doAdd: Boolean): LinearLayout{
-        if(doAdd) {
-            claimArea.visibility = View.VISIBLE
-            if(touchHand != nullTile)
-                changeSelectedHand(touchHand, -20)
-            touchHand = nullTile
+        if(num == -1){
+            operationText.text = operationOrClaimTextMap.get(currentPlayer)
+            currentPlayer = (currentPlayer + 1) % 4
+            changeClaimButtonVisivility(View.VISIBLE, (currentPlayer + 3) % 4, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
         }
-
-        val preDiscardTile = if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) discards.get((currentPlayer + 3) % 4).getLast() else Tile(Tile.Type.UNDEFINED, 0)
-        var layoutContainer = LinearLayout(ContextGetter.applicationContext())
-        layoutContainer.orientation = LinearLayout.HORIZONTAL
-
-        var discardUseTile = Tile(Tile.Type.UNDEFINED, 0)
-        var claimIndex = 0
-        if(doAdd){
-            if(type.equals("kong")){
-                val punged = if(pungs.get(claimPlayer).size != 0) true else false
-                if(punged && pungs.get(claimPlayer).contains(claimTileList.get(0))){
-                    val index = claims.get(claimPlayer).indexOfFirst { it.get(0).equals("pung") && it.get(1).equals(claimTileList.get(0).toString()) }
-                    val pastClaimDirection = pungs.get(claimPlayer).get(claimTileList.get(0))!!
-                    var claimView = claimLayout.get(claimPlayer)!!.getChildAt(index)
-                    claimLayout.get(claimPlayer)!!.removeViewAt(index)
-                    (claimView as LinearLayout).removeViewAt(pastClaimDirection)
-
-                    val layout = LinearLayout(ContextGetter.applicationContext())
-                    val imageView = ImageView(ContextGetter.applicationContext())
-                    val imageView2 = ImageView(ContextGetter.applicationContext())
-                    val textView = TextView(ContextGetter.applicationContext())
-                    val imageId = resources.getIdentifier(Tile.getTileIdTextByText(claimTileList.get(0).toString()), "drawable", "com.example.nanshanten")
-                    layout.orientation = LinearLayout.VERTICAL
-                    imageView.setImageResource(imageId)
-                    imageView2.setImageResource(imageId)
-                    imageView.rotation = -90.0f
-                    imageView2.rotation = -90.0f
-                    val imagaViewMarginParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29)) as ViewGroup.MarginLayoutParams
-                    imagaViewMarginParams.setMargins(dpToPx(0), dpToPx(-3), dpToPx(0), dpToPx(-4))
-                    imageView.layoutParams = imagaViewMarginParams
-                    imageView2.layoutParams = imagaViewMarginParams
-                    textView.text = claimTileList.get(0).toString()
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
-                    textView.gravity = Gravity.CENTER
-
-                    layout.addView(imageView)
-                    layout.addView(imageView2)
-                    layout.addView(textView)
-
-                    val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-                    layoutMarginParams.setMargins(dpToPx(1), dpToPx(5), dpToPx(1), dpToPx(0))
-                    layout.layoutParams = layoutMarginParams
-
-                    claimView.addView(layout, pastClaimDirection)
-                    claimView.gravity = Gravity.BOTTOM
-                    claimLayout.get(claimPlayer)!!.addView(claimView, index)
-
-                    if(claimPlayer == 0){
-                        isKong = true
-                        hand.extendKong(claimTileList.get(0))
-                        pungs.get(0).remove(claimTileList.get(0))
-                        changePlayer(claimPlayer)
-                        forceDraw()
-                    } else {
-                        pungs.get(claimPlayer).remove(claimTileList.get(0))
-                        changePlayer((claimPlayer + 1) % 4)
-                        wall.remove(claimTileList.get(0))
-                        (tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(0).toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(claimTileList.get(0)) + "枚"
-                        if(wall.count(claimTileList.get(0)) == 0)
-                            disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(0).toString()))!!)
-                    }
-                    if(currentPlayer != 0)
-                        changeClaimButtonVisivility(View.GONE)
-                    confirmButton.visibility = View.INVISIBLE
-
-                    if(doraArea.childCount <= 5){
-                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
-                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
-                    }
-
-                    updateView()
-
-                    return claimView
-                }
-            }
+        else {
+            currentPlayer = num
+            operationText.text = operationTextMap.get(currentPlayer)
+            changeClaimButtonVisivility(View.GONE, pungNum = pungNum, chowNum = chowNum, kongNum = kongNum, nextKongNum = nextKongNum)
         }
-        for (index in (0..(claimTileList.size - 1))) {
-            val layout = LinearLayout(ContextGetter.applicationContext())
-            val imageView = ImageView(ContextGetter.applicationContext())
-            val textView = TextView(ContextGetter.applicationContext())
-            lateinit var handView: LinearLayout
-            var imageId: Int
+        (handNumToLayout.get(14 + currentPlayer)!!.parent as LinearLayout).setBackgroundResource(R.drawable.border)
 
-            if(claimPlayer == 0){
-                if(discardUseTile.type == Tile.Type.UNDEFINED && claimTileList.get(index).equals(preDiscardTile))
-                    handView = nullTile
-                else
-                    handView = handNumToLayout.get(hand.getHand().indexOf(claimTileList.get(index)) + 1)!!
-                if((handView.getChildAt(1) as TextView).text.toString().equals("")){
-                    imageId = resources.getIdentifier(Tile.getTileIdTextByText(preDiscardTile.toString()), "drawable", "com.example.nanshanten")
-                } else{
-                    imageId = resources.getIdentifier(Tile.getTileIdTextByText((handView!!.getChildAt(1) as TextView).text.toString()), "drawable", "com.example.nanshanten")
-                }
-            } else{
-                handView = tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(index).toString()))!!
-                if((handView.getChildAt(2) as TextView).text.toString().equals("")){
-                    imageId = resources.getIdentifier(Tile.getTileIdTextByText(preDiscardTile.toString()), "drawable", "com.example.nanshanten")
-                } else{
-                    imageId = resources.getIdentifier(Tile.getTileIdTextByText((handView!!.getChildAt(2) as TextView).text.toString()), "drawable", "com.example.nanshanten")
-                }
-            }
-
-            if(claimTileList.get(index).equals(preDiscardTile))
-                discardUseTile = preDiscardTile
-            layout.orientation = LinearLayout.VERTICAL
-            imageView.setImageResource(imageId)
-            imageView.layoutParams = if(doAdd) LinearLayout.LayoutParams(dpToPx(22), dpToPx(29)) else LinearLayout.LayoutParams(dpToPx(28), dpToPx(36))
-            if(claimPlayer == 0){
-                if((handView.getChildAt(1) as TextView).text.toString().equals(""))
-                    textView.text = preDiscardTile.toString()
-                else
-                    textView.text = (handView.getChildAt(1) as TextView).text
-            } else{
-                if((handView.getChildAt(2) as TextView).text.toString().equals(""))
-                    textView.text =  preDiscardTile.toString()
-                else
-                    textView.text = (handView.getChildAt(2) as TextView).text
-            }
-
-            if(doAdd)
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8.0f)
-            else
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0f)
-            textView.gravity = Gravity.CENTER
-
-            if(doAdd){
-                if(!concealedKong){
-                    if((currentPlayer + 3) % 4 == (3 - index + claimPlayer) % 4) {
-                        imageView.rotation = -90.0f
-                        imageView.layoutParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29))
-                        claimIndex = index
-                    }
-                } else{
-                    if(index == 0 || index == claimTileList.size - 1)
-                        imageView.setImageResource(resources.getIdentifier("tile_back", "drawable", "com.example.nanshanten"))
-                }
-            }
-
-            layout.addView(imageView)
-            layout.addView(textView)
-
-            val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-            layoutMarginParams.setMargins(dpToPx(1), dpToPx(5), dpToPx(1), dpToPx(0))
-            layout.layoutParams = layoutMarginParams
-            layoutContainer.addView(layout)
-            val containerMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
-            if(doAdd)
-                containerMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(10), dpToPx(0))
-            else
-                containerMarginParams.setMargins(dpToPx(10), dpToPx(0), dpToPx(15), dpToPx(0))
-            layoutContainer.layoutParams = containerMarginParams
+        for(index in (0..doraArea.childCount - 1)){
+            doraArea.getChildAt(index).setOnClickListener(doraClickListener)
         }
-        if(doAdd){
-            claims.get(claimPlayer).add(mutableListOf(type, claimTileList.get(0).toString()))
-            if(type.equals("kong") && !concealedKong){
-                if(claimPlayer == (currentPlayer + 2) % 4){
-                    val thirdTileLayout = layoutContainer.getChildAt(2)
-                    val forthTileLayout = layoutContainer.getChildAt(3)
-                    layoutContainer.removeViewAt(2)
-                    layoutContainer.removeViewAt(2)
-                    layoutContainer.addView(forthTileLayout)
-                    layoutContainer.addView(thirdTileLayout)
-                }
-            }
-            claimLayout.get(claimPlayer)!!.addView(layoutContainer)
-            claimTileList.remove(discardUseTile)
-            if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty())
-                discards.get((currentPlayer + 3) % 4).popHand()
-            var player = (currentPlayer + 3) % 4
-            while(hand.getDraw().type == Tile.Type.UNDEFINED && player != claimPlayer){
-                discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
-                player = (player + 1) % 4
-            }
-
-            if(claimPlayer == 0){
-                if (type.equals("pung")) {
-                    hand.pung(claimTileList, discardUseTile)
-                    pungs.get(0).set(claimTileList.get(0), claimIndex)
-                    changePlayer(claimPlayer)
-                    forceDiscard()
-                }
-                if (type.equals("chow")) {
-                    hand.chow(claimTileList, discardUseTile)
-                    changePlayer(claimPlayer)
-                    forceDiscard()
-                }
-                if (type.equals("kong")) {
-                    isKong = true
-                    hand.kong(claimTileList, discardUseTile)
-                    changePlayer(claimPlayer)
-                    forceDraw()
-                    if(doraArea.childCount <= 5){
-                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
-                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
-                    }
-                }
-            } else {
-                if (type.equals("pung")){
-                    pungs.get(player).set(claimTileList.get(0), claimIndex)
-                    changePlayer(player)
-                }
-                if (type.equals("chow")) {
-                    changePlayer(player)
-                }
-                if (type.equals("kong")) {
-                    changePlayer((player + 1) % 4)
-                    if(doraArea.childCount <= 5){
-                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1)))
-                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
-                    }
-                }
-                wall.removeAll(claimTileList)
-                claimTileList.forEach {
-                    (tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(it) + "枚"
-                    if(wall.count(it) == 0)
-                        disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!)
-                }
-            }
-            if(currentPlayer != 0)
-                changeClaimButtonVisivility(View.GONE)
-            confirmButton.visibility = View.INVISIBLE
-            updateView()
-        }
-        return layoutContainer
-    }
-
-    fun forceDiscard(){
-        if(Regex("kong").containsMatchIn(canClaim())){
-            operationText.text = "手牌から1つ捨てる or カンしてください"
-            confirmButton.visibility = View.GONE
-        } else{
-            operationText.text = "手牌から1つ捨ててください"
-            confirmButton.visibility = View.INVISIBLE
-        }
-        enableHandListener(true)
-        enableTileListener(false)
-        drawArea.background = null
+        canClaim()
     }
 
     fun changeClaimButtonVisivility(param: Int, player: Int = -1, pungNum: Int = -1, chowNum: Int = -1, kongNum: Int = -1, nextKongNum: Int = -1){
@@ -777,6 +455,40 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         }
     }
 
+    fun changeHand(view: View, id: Int) {
+        val tile = Tile(Tile.getTileType(id), Tile.getTileNumber(id))
+        (view as LinearLayout).background = null
+        if (wall.count(tile) != 0) {
+            val tileImageId = getDragImageId(id)
+            val tileText = Tile.getTileText(Tile.getTileType(id), Tile.getTileNumber(id))
+            (view.getChildAt(0) as ImageView).setImageResource(tileImageId)
+            (view.getChildAt(1) as TextView).text = tileText
+            if(handIdToNum.get(view.id)!! <= hand.getHand().size) {
+                hand.changeTile(handIdToNum.get(view.id)!! - 1, tile)
+                Log.d("debug", "change at hand" + handIdToNum.get(view.id)!!.toString() + ", " + hand.getTile(handIdToNum.get(view.id)!! - 1).toString())
+            }
+            else if(handIdToNum.get(view.id)!! == 14) {
+
+                hand.setDraw(tile)
+                Log.d("debug", "change at draw, " + hand.getDraw().toString())
+            }
+            operationText.text = operationTextMap.get(currentPlayer)
+            changeClaimButtonVisivility(View.GONE)
+            for(index in (0..doraArea.childCount - 1)){
+                doraArea.getChildAt(index).setOnClickListener(null)
+            }
+            yakuText.text = Yaku.getYakuList(hand).toString()
+        }
+        updateView()
+    }
+
+    fun changeSelectedHand(view: View, dp:Int){
+        val layout = view as LinearLayout
+        val layoutMarginParams = (layout.layoutParams as ViewGroup.MarginLayoutParams)
+        layoutMarginParams.setMargins(layoutMarginParams.leftMargin, layoutMarginParams.topMargin, layoutMarginParams.rightMargin, layoutMarginParams.bottomMargin + dpToPx(dp))
+        layout.layoutParams = layoutMarginParams
+    }
+
     fun updateView(){
         hand.sortHand()
         for(index in 1..14) {
@@ -786,8 +498,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                     val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getHand().get(index - 1).toString()), "drawable", "com.example.nanshanten")
                     (handView.getChildAt(0) as ImageView).setImageResource(imageId)
                     (handView.getChildAt(1) as TextView).text = hand.getHand().get(index - 1).toString()
-                }
-                else{
+                } else{
                     val imageId = resources.getIdentifier("null_tile", "drawable", "com.example.nanshanten")
                     (handView.getChildAt(0) as ImageView).setImageResource(imageId)
                     (handView.getChildAt(1) as TextView).text = ""
@@ -797,7 +508,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                     chowButton.visibility = View.GONE
                     kongButton.visibility = View.GONE
                 }
-            }else {
+            } else {
                 val imageId = resources.getIdentifier(Tile.getTileIdTextByText(hand.getDraw().toString()), "drawable", "com.example.nanshanten")
                 (handView.getChildAt(0) as ImageView).setImageResource(imageId)
                 (handView.getChildAt(1) as TextView).text = hand.getDraw().toString()
@@ -812,14 +523,237 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
                     val imageId = resources.getIdentifier(Tile.getTileIdTextByText(discards.get(player).getHandWithoutNull().get(index).toString()), "drawable", "com.example.nanshanten")
                     (discardLayout.getChildAt(0) as ImageView).setImageResource(imageId)
                     (discardLayout.getChildAt(1) as TextView).text = discards.get(player).getHandWithoutNull().get(index).toString()
-                }
-                else{
+                } else{
                     val imageId = resources.getIdentifier("null_tile", "drawable", "com.example.nanshanten")
                     (discardLayout.getChildAt(0) as ImageView).setImageResource(imageId)
                     (discardLayout.getChildAt(1) as TextView).text = ""
                 }
             }
         }
+    }
+
+    fun createTileImage(tile: Tile, width: Int = 36, height: Int = 48, left: Int = 1, top: Int = 5, right: Int = 1, bottom: Int = 0): ImageView{
+        val imageView = ImageView(ContextGetter.applicationContext())
+        val imageId = resources.getIdentifier(if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "tile_back" else Tile.getTileIdTextByText(tile.toString()), "drawable", "com.example.nanshanten")
+        imageView.setImageResource(imageId)
+        val imagaViewMarginParams = LinearLayout.LayoutParams(dpToPx(width), dpToPx(height)) as ViewGroup.MarginLayoutParams
+        imagaViewMarginParams.setMargins(dpToPx(left), dpToPx(top), dpToPx(right), dpToPx(bottom))
+        imageView.layoutParams = imagaViewMarginParams
+
+        return imageView
+    }
+
+    fun createTileText(tile: Tile, textSize: Float = 10.0f): TextView{
+        val textView = TextView(ContextGetter.applicationContext())
+        textView.text = if(tile.type == Tile.Type.UNDEFINED && tile.number == 1) "未選択" else tile.toString()
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        textView.gravity = Gravity.CENTER
+
+        return textView
+    }
+
+    fun createTileView(tile: Tile, width: Int = 36, height: Int = 48, textSize: Float = 10.0f,
+                       iLeft: Int = 1, iTop: Int = 5, iRight: Int = 1, iBottom: Int = 0, lLeft: Int = 5, lTop: Int = 0, lRight: Int = 0, lBottom: Int = 0): LinearLayout{
+        val layout = LinearLayout(ContextGetter.applicationContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+        layout.addView(createTileImage(tile, width, height, iLeft, iTop, iRight, iBottom))
+        layout.addView(createTileText(tile, textSize))
+
+        val layoutMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+        layoutMarginParams.setMargins(dpToPx(lLeft), dpToPx(lTop), dpToPx(lRight), dpToPx(lBottom))
+        layout.layoutParams = layoutMarginParams
+        return layout
+    }
+
+    fun createClaimView(type: String, claimPlayer: Int, claimTileList: MutableList<Tile>, concealedKong: Boolean, doAdd: Boolean): LinearLayout{
+        if(doAdd) {
+            claimArea.visibility = View.VISIBLE
+            if(touchHand != nullTile)
+                changeSelectedHand(touchHand, -20)
+            touchHand = nullTile
+        }
+
+        val preDiscardTile = if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty()) discards.get((currentPlayer + 3) % 4).getLast() else Tile(Tile.Type.UNDEFINED, 0)
+        var layoutContainer = LinearLayout(ContextGetter.applicationContext())
+        layoutContainer.orientation = LinearLayout.HORIZONTAL
+
+        var discardUseTile = Tile(Tile.Type.UNDEFINED, 0)
+        var claimIndex = 0
+        if(doAdd){
+            if(type.equals("kong")){
+                val punged = if(pungs.get(claimPlayer).size != 0) true else false
+                if(punged && pungs.get(claimPlayer).contains(claimTileList.get(0))){
+                    val index = claims.get(claimPlayer).indexOfFirst { it.get(0).equals("pung") && it.get(1).equals(claimTileList.get(0).toString()) }
+                    val pastClaimDirection = pungs.get(claimPlayer).get(claimTileList.get(0))!!
+                    var claimView = claimLayout.get(claimPlayer)!!.getChildAt(index)
+                    claimLayout.get(claimPlayer)!!.removeViewAt(index)
+                    (claimView as LinearLayout).removeViewAt(pastClaimDirection)
+
+                    val layout = createTileView(claimTileList.get(0), 29, 29, 8.0f, 0, -3, 0, -4, 1, 5, 1, 0)
+                    val imageView = createTileImage(claimTileList.get(0), 29, 29, 0, -3, 0, -4)
+
+                    imageView.rotation = -90.0f
+                    (layout.getChildAt(0) as ImageView).rotation = -90.0f
+                    layout.addView(imageView, 0)
+
+                    claimView.addView(layout, pastClaimDirection)
+                    claimView.gravity = Gravity.BOTTOM
+                    claimLayout.get(claimPlayer)!!.addView(claimView, index)
+
+                    if(claimPlayer == 0){
+                        isKong = true
+                        hand.extendKong(claimTileList.get(0))
+                        pungs.get(0).remove(claimTileList.get(0))
+                        changePlayer(claimPlayer)
+                        forceDraw()
+                    } else {
+                        pungs.get(claimPlayer).remove(claimTileList.get(0))
+                        changePlayer((claimPlayer + 1) % 4)
+                        wall.remove(claimTileList.get(0))
+                        (tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(0).toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(claimTileList.get(0)) + "枚"
+                        if(wall.count(claimTileList.get(0)) == 0)
+                            disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(0).toString()))!!)
+                    }
+                    if(currentPlayer != 0)
+                        changeClaimButtonVisivility(View.GONE)
+                    confirmButton.visibility = View.INVISIBLE
+
+                    if(doraArea.childCount <= 4){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1), 36, 48, 10.0f,0, 0, 0, 0, 5, 0,5,0))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
+
+                    updateView()
+
+                    return claimView
+                }
+            }
+        }
+        for (index in (0..(claimTileList.size - 1))) {
+            var tile: Tile
+            lateinit var handView: LinearLayout
+
+            if(claimPlayer == 0){
+                if(discardUseTile.type == Tile.Type.UNDEFINED && claimTileList.get(index).equals(preDiscardTile))
+                    handView = nullTile
+                else
+                    handView = handNumToLayout.get(hand.getHand().indexOf(claimTileList.get(index)) + 1)!!
+                if((handView.getChildAt(1) as TextView).text.toString().equals("")){
+                    tile = preDiscardTile
+                } else{
+                    val text = (handView!!.getChildAt(1) as TextView).text.toString()
+                    tile = Tile(Tile.getTileTypeByText(text), Tile.getTileNumberByText(text))
+                }
+            } else{
+                handView = tileStringToLayout.get(Tile.getTileIdTextByText(claimTileList.get(index).toString()))!!
+                if((handView.getChildAt(2) as TextView).text.toString().equals("")){
+                    tile = preDiscardTile
+                } else{
+                    val text = (handView!!.getChildAt(2) as TextView).text.toString()
+                    tile = Tile(Tile.getTileTypeByText(text), Tile.getTileNumberByText(text))
+                }
+            }
+
+            val layout = if(doAdd) createTileView(tile, 22, 29, 8.0f, 0, 0, 0, 0, 1, 5, 1, 0)
+            else createTileView(tile, 28, 36, 10.0f, 0, 0, 0, 0, 1, 5, 1, 0)
+
+            if(claimTileList.get(index).equals(preDiscardTile))
+                discardUseTile = preDiscardTile
+
+            if(doAdd){
+                if(!concealedKong){
+                    if((currentPlayer + 3) % 4 == (3 - index + claimPlayer) % 4) {
+                        (layout.getChildAt(0) as ImageView).rotation = -90.0f
+                        (layout.getChildAt(0) as ImageView).layoutParams = LinearLayout.LayoutParams(dpToPx(29), dpToPx(29))
+                        claimIndex = index
+                    }
+                } else{
+                    if(index == 0 || index == claimTileList.size - 1)
+                        (layout.getChildAt(0) as ImageView).setImageResource(resources.getIdentifier("tile_back", "drawable", "com.example.nanshanten"))
+                }
+            }
+
+            layoutContainer.addView(layout)
+            val containerMarginParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT) as ViewGroup.MarginLayoutParams
+            if(doAdd)
+                containerMarginParams.setMargins(dpToPx(5), dpToPx(0), dpToPx(10), dpToPx(0))
+            else
+                containerMarginParams.setMargins(dpToPx(10), dpToPx(0), dpToPx(15), dpToPx(0))
+            layoutContainer.layoutParams = containerMarginParams
+        }
+        if(doAdd){
+            claims.get(claimPlayer).add(mutableListOf(type, claimTileList.get(0).toString()))
+            if(type.equals("kong") && !concealedKong){
+                if(claimPlayer == (currentPlayer + 2) % 4){
+                    val thirdTileLayout = layoutContainer.getChildAt(2)
+                    val forthTileLayout = layoutContainer.getChildAt(3)
+                    layoutContainer.removeViewAt(2)
+                    layoutContainer.removeViewAt(2)
+                    layoutContainer.addView(forthTileLayout)
+                    layoutContainer.addView(thirdTileLayout)
+                }
+            }
+            claimLayout.get(claimPlayer)!!.addView(layoutContainer)
+            claimTileList.remove(discardUseTile)
+            if(discards.get((currentPlayer + 3) % 4).getHand().isNotEmpty())
+                discards.get((currentPlayer + 3) % 4).popHand()
+            var player = (currentPlayer + 3) % 4
+            while(hand.getDraw().type == Tile.Type.UNDEFINED && player != claimPlayer){
+                discards.get(player).pushHand(Tile(Tile.Type.UNDEFINED, 0))
+                player = (player + 1) % 4
+            }
+
+            if(claimPlayer == 0){
+                if (type.equals("pung")) {
+                    hand.pung(claimTileList, discardUseTile)
+                    pungs.get(0).set(claimTileList.get(0), claimIndex)
+                    changePlayer(claimPlayer)
+                    forceDiscard()
+                }
+                if (type.equals("chow")) {
+                    hand.chow(claimTileList, discardUseTile)
+                    changePlayer(claimPlayer)
+                    forceDiscard()
+                }
+                if (type.equals("kong")) {
+                    isKong = true
+                    hand.kong(claimTileList, discardUseTile)
+                    changePlayer(claimPlayer)
+                    forceDraw()
+                    if(doraArea.childCount <= 4){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1), 36, 48, 10.0f,0, 0, 0, 0, 5, 0,5,0))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
+                }
+            } else {
+                if (type.equals("pung")){
+                    pungs.get(player).set(claimTileList.get(0), claimIndex)
+                    changePlayer(player)
+                }
+                if (type.equals("chow")) {
+                    changePlayer(player)
+                }
+                if (type.equals("kong")) {
+                    changePlayer((player + 1) % 4)
+                    if(doraArea.childCount <= 4){
+                        doraArea.addView(createTileView(Tile(Tile.Type.UNDEFINED, 1), 36, 48, 10.0f,0, 0, 0, 0, 5, 0,5,0))
+                        doraArea.getChildAt(doraArea.childCount - 1).setOnClickListener(doraClickListener)
+                    }
+                }
+                wall.removeAll(claimTileList)
+                claimTileList.forEach {
+                    (tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!.getChildAt(0) as TextView).text = "あと" + wall.count(it) + "枚"
+                    if(wall.count(it) == 0)
+                        disableTile(tileStringToLayout.get(Tile.getTileIdTextByText(it.toString()))!!)
+                }
+            }
+            if(currentPlayer != 0)
+                changeClaimButtonVisivility(View.GONE)
+            confirmButton.visibility = View.INVISIBLE
+            updateView()
+        }
+        return layoutContainer
     }
 
     fun getDragImageId(dragId: Int): Int{
@@ -856,8 +790,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             hand12.setOnClickListener(handClickListener)
             hand13.setOnClickListener(handClickListener)
             handDraw.setOnClickListener(handClickListener)
-        }
-        else{
+        } else{
             hand1.setOnClickListener(null)
             hand2.setOnClickListener(null)
             hand3.setOnClickListener(null)
@@ -911,7 +844,7 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
             tile_whiteDragon.setOnClickListener(tileClickListener)
             tile_greenDragon.setOnClickListener(tileClickListener)
             tile_redDragon.setOnClickListener(tileClickListener)
-        }else{
+        } else{
             tile_character1.setOnClickListener(null)
             tile_character2.setOnClickListener(null)
             tile_character3.setOnClickListener(null)
@@ -1063,31 +996,5 @@ class HandFragment : Fragment(R.layout.activity_main), ClaimDialogFragment.Dialo
         windAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         wind.adapter = windAdapter
         wind.setSelection(0)
-    }
-}
-
-private class MyDragShadowBuilder(v: View) : View.DragShadowBuilder(v) {
-
-    private val shadow = v
-
-    // Defines a callback that sends the drag shadow dimensions and touch point back to the
-    // system.
-    override fun onProvideShadowMetrics(size: Point, touch: Point) {
-
-        // Sets the width of the shadow to half the width of the original View
-        val width: Int = view.width / 2
-
-        // Sets the height of the shadow to half the height of the original View
-        val height: Int = view.height + 10
-
-        size.set(view.width, view.height)
-        touch.set(width,height);
-    }
-
-    // Defines a callback that draws the drag shadow in a Canvas that the system constructs
-    // from the dimensions passed in onProvideShadowMetrics().
-    override fun onDrawShadow(canvas: Canvas) {
-        // Draws the ColorDrawable in the Canvas passed in from the system.
-        shadow.draw(canvas)
     }
 }

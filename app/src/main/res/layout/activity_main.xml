@@ -114,10 +114,9 @@
 
                             <ImageView
                                 android:id="@+id/dora1Image"
-                                android:layout_width="36dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="48dp"
                                 android:adjustViewBounds="false"
-                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/tile_back" />
 
                             <TextView

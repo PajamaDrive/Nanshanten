@@ -5,9 +5,10 @@ import android.util.Log
 class Hand{
     private lateinit var tiles: MutableList<Tile>
     private lateinit var drawTile: Tile
-    private lateinit var pungs: MutableList<Tile>
-    private lateinit var chows: MutableList<Tile>
-    private lateinit var kongs: MutableList<Tile>
+    lateinit var pungs: MutableList<MutableList<Tile>>
+    lateinit var chows: MutableList<MutableList<Tile>>
+    lateinit var kongs: MutableList<MutableList<Tile>>
+    var claimed = false
 
     init{
         tiles = mutableListOf(Tile(Tile.Type.CHARACTER, 1), Tile(Tile.Type.CHARACTER, 9),
@@ -68,47 +69,54 @@ class Hand{
     }
 
     fun getSortAllHand(): MutableList<Tile>{
-        return tiles.toMutableList().plus(chows).plus(pungs).plus(kongs).sortedWith(compareBy({it.type}, {it.number})).toMutableList()
+        return tiles.toMutableList().plus(chows.flatten()).plus(pungs.flatten()).plus(kongs.flatten()).sortedWith(compareBy({it.type}, {it.number})).toMutableList()
     }
 
     fun chow(removeTiles: MutableList<Tile>, discardTile: Tile){
+        claimed = true
+        val addList = mutableListOf<Tile>()
         for(tile in removeTiles) {
-            chows.add(tiles.find { it.equals(tile) }!!)
+            addList.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
         if(discardTile.type != Tile.Type.UNDEFINED)
-            chows.add(discardTile)
+            addList.add(discardTile)
+        chows.add(addList)
     }
 
     fun pung(removeTiles: MutableList<Tile>, discardTile: Tile){
+        claimed = true
+        val addList = mutableListOf<Tile>()
         for(tile in removeTiles) {
-            pungs.add(tiles.find { it.equals(tile) }!!)
+            addList.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
         if(discardTile.type != Tile.Type.UNDEFINED)
-            pungs.add(discardTile)
+            addList.add(discardTile)
+        pungs.add(addList)
     }
 
     fun kong(removeTiles: MutableList<Tile>, discardTile: Tile){
+        val addList = mutableListOf<Tile>()
         if(drawTile.type != Tile.Type.UNDEFINED){
-            kongs.add(removeTiles.get(0))
+            addList.add(removeTiles.get(0))
             removeTiles.removeAt(0)
             drawTile = Tile(Tile.Type.UNDEFINED, 0)
+        } else{
+            claimed = true
         }
         for(tile in removeTiles) {
-            kongs.add(tiles.find { it.equals(tile) }!!)
+            addList.add(tiles.find { it.equals(tile) }!!)
             tiles.remove(tile)
         }
         if(discardTile.type != Tile.Type.UNDEFINED)
-            kongs.add(discardTile)
+            addList.add(discardTile)
+        kongs.add(addList)
     }
 
     fun extendKong(tile: Tile){
-        (0..2).forEach {
-            pungs.remove(tile)
-            kongs.add(tile)
-        }
-        kongs.add(tile)
+        pungs.remove(pungs.find { it.get(0).equals(tile) })
+        kongs.add(mutableListOf(tile, tile, tile, tile))
         addDrawToHand()
         tiles.remove(tile)
     }

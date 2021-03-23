@@ -19,35 +19,51 @@ class Yaku{
             return false
         }
 
-        fun yakuOfPairs(hand: Hand): MutableList<String>{
-            val yakus = mutableListOf<String>()
-            val group = TileGroup.PAIR.getGroupList(hand.getHand()).distinctBy { it.get(0).toString() }
-            if(group.size == 7){
-                yakus.add("七対子")
-                if(TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14)
-                    yakus.add("字一色")
-            }
-            return yakus
-        }
-
         fun containPungYaku(hand: Hand): MutableList<String>{
             val yakus = mutableListOf<String>()
-            val pairList = TileGroup.PAIR.getGroupList(hand.getHand()).distinctBy { it.get(0).toString() }
+            val pairList = TileGroup.PAIR.getGroupList(hand.getHand()).distinctBy { it.get(0).toString() }.toMutableList()
             if(pairList.size == 7){
                 yakus.add("七対子")
                 if(TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14)
                     yakus.add("字一色")
             }
+            pairList.add(0, mutableListOf())
             for(pair in pairList) {
                 val removePairHand = hand.getRemoveList(pair)
                 val kongList = TileGroup.KONG.getGroupList(removePairHand).distinctBy { it.get(0).toString() }.toMutableList()
-                var kongCombination = combination(kongList, mutableListOf(mutableListOf(mutableListOf())))
+
+                val kongCombination = combination(kongList, mutableListOf(mutableListOf(mutableListOf())))
+                    .map { list ->
+                        var newList = list
+                        if(hand.kongs.isNotEmpty()){
+                            hand.kongs.forEach {
+                                if(newList.get(0).size == 0)
+                                    newList.set(0, it)
+                                else
+                                    newList = newList.plusElement(it).toMutableList()
+                            }
+                        }
+                        newList
+                    }.toMutableList()
                 for (kong in kongCombination) {
+                    Log.d("debug", kong.toString())
                     val removeKongList = kong.flatten().toMutableList()
                     removeKongList.addAll(pair.toMutableList())
                     val removeKongHand = hand.getRemoveList(removeKongList)
                     val pungList = TileGroup.PUNG.getGroupList(removeKongHand).distinctBy { it.get(0).toString() }.toMutableList()
                     var pungCombination = combination(pungList, mutableListOf(mutableListOf(mutableListOf())))
+                        .map { list ->
+                        var newList = list
+                        if(hand.pungs.isNotEmpty()){
+                            hand.pungs.forEach {
+                                if(newList.get(0).size == 0)
+                                    newList.set(0, it)
+                                else
+                                    newList = newList.plusElement(it).toMutableList()
+                            }
+                        }
+                        newList
+                    }.toMutableList()
                     for (pung in pungCombination) {
                         val removePungList = pung.flatten().toMutableList()
                         removePungList.addAll(removeKongList.toMutableList())
@@ -55,13 +71,33 @@ class Yaku{
                         val chowList = TileGroup.CHOW.getGroupList(removePungHand)
                         var chowCombination = combination(chowList, mutableListOf(mutableListOf(mutableListOf())))
                         chowCombination = chowCombination.filter { hand.canRemove(it.flatten().toMutableList()) &&
-                                hand.getRemoveList(removePungList.plus(it.flatten()).toMutableList()).size == 0 }.toMutableList()
+                            hand.getRemoveList(removePungList.plus(it.flatten()).toMutableList()).size == 0 }
+                            .map { list ->
+                                var newList = list
+                                if(hand.chows.isNotEmpty()){
+                                    hand.chows.forEach {
+                                        if(newList.get(0).size == 0)
+                                            newList.set(0, it)
+                                        else
+                                            newList = newList.plusElement(it).toMutableList()
+                                    }
+                                }
+                                newList
+                            }.toMutableList()
                         for(chow in chowCombination){
                             val removeChowList = chow.flatten().toMutableList()
                             removeChowList.addAll(removePungList.toMutableList())
+
+                            if(kong.size == 4)
+                                yakus.add("四槓子")
+
+                            if(kong.size >= 3)
+                                yakus.add("三槓子")
+
                             if (pung.size == 4) {
                                 yakus.add("対々和")
-                                yakus.add("四暗刻")
+                                if(!hand.claimed)
+                                    yakus.add("四暗刻")
                                 if (TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14)
                                     yakus.add("字一色")
                                 if (TileGroup.WIND.getGroupListNum(pung.flatten().toMutableList()) == 12)
@@ -74,7 +110,8 @@ class Yaku{
                                 }
                             }
                             if (pung.size >= 3) {
-                                yakus.add("三暗刻")
+                                if((pung.size == 3 && hand.pungs.size == 0) || (pung.size == 4 && hand.pungs.size <= 1))
+                                    yakus.add("三暗刻")
                                 if (TileGroup.DRAGON.getGroupListNum(pung.flatten().toMutableList()) == 9)
                                     yakus.add("大三元")
                                 if (TileGroup.WIND.getGroupListNum(hand.getHand()) == 11)
@@ -92,7 +129,7 @@ class Yaku{
                                     yakus.add("三色同順")
                             }
 
-                            if(chow.size >= 2){
+                            if(chow.size >= 2 && !hand.claimed){
                                 val chowSize = TileGroup.TYPE.getGroupList(chow.distinctBy{ it.get(0).toString() }.flatten().toMutableList()).map{ it.size }
                                 val maxDistinctSize = TileGroup.TYPE.getGroupList(chow.flatten().toMutableList()).map{ it.size }.mapIndexed { index, i -> i - chowSize[index]}.max()
                                 if(chow.size - chow.distinctBy{ it.get(0).toString() }.size == 1)
@@ -116,8 +153,7 @@ class Yaku{
 
                             if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].type <= Tile.Type.BAMBOO) {
                                 yakus.add("清一色")
-                            }
-                            else if(TileGroup.CHARACTER.getGroupListNum(hand.getHand()) + TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14 ||
+                            } else if(TileGroup.CHARACTER.getGroupListNum(hand.getHand()) + TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14 ||
                                 TileGroup.CIRCLE.getGroupListNum(hand.getHand()) + TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14 ||
                                 TileGroup.BAMBOO.getGroupListNum(hand.getHand()) + TileGroup.HONOR.getGroupListNum(hand.getHand()) == 14) {
                                 yakus.add("混一色")
@@ -129,7 +165,7 @@ class Yaku{
                                         yakus.add("純全帯么九")
                                     else
                                         yakus.add("混全帯么九")
-                                }else if(TileGroup.TERMINAL_AND_HONOR.getGroupListNum(chow.flatten().toMutableList()) == chow.size){
+                                } else if(TileGroup.TERMINAL_AND_HONOR.getGroupListNum(chow.flatten().toMutableList()) == chow.size){
                                     if (TileGroup.SUIT.getGroupListNum(hand.getHand()) == 14)
                                         yakus.add("純全帯么九")
                                     else
@@ -141,7 +177,7 @@ class Yaku{
                             }
 
                             if(TileGroup.SUIT.getGroupListNum((pair)) == 2){
-                                if(chow.size == 4){
+                                if(chow.size == 4 && !hand.claimed){
                                     yakus.add("平和")
                                 }
                             }
@@ -149,7 +185,7 @@ class Yaku{
                             if(TileGroup.STRAIGHT.getGroupListNum(hand.getHand()) >= 1){
                                 yakus.add("一気通貫")
                                 if(TileGroup.TYPE.getGroupList(hand.getHand()).maxBy { it.size }!!.size == 14 && hand.getHand()[0].type <= Tile.Type.BAMBOO){
-                                    if(hand.getHand().count{it.number == 1} + hand.getHand().count{it.number == 9} >= 6)
+                                    if(hand.getHand().count{it.number == 1} + hand.getHand().count{it.number == 9} >= 6 && !hand.claimed)
                                         yakus.add("九蓮宝燈")
                                 }
                             }
